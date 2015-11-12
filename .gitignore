@@ -1,0 +1,10 @@
+/src
+/build
+/config
+/tasks
+/node_modules
+/package.json
+/bower.json
+.editorconfig
+.jshintrc
+.jscsrc
