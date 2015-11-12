@@ -1,33 +1,12 @@
-# Code examples
+# Reddit_Redux_Riot
 
-Just different examples of development code.
-The idea is to have various examples for a scalable app.
-The app retrieves data from reddit and presents it.
+## Installation
 
-To test you need to clone and follow the next instructions...
+- Install [node](http://nodejs.org)
+- `npm install`
 
-**NOTE:** For all examples node is needed
+## Running
+- `npm run start`
 
-### Backbone + Bedrock
-
-```bash
-git checkout bedrock
-npm install
-npm run start-prod
-```
-
-##### Size stats
-- Build folder: **152kb**
-- app.js: **141kb**
-
-### Redux + Riot.js
-
-```bash
-git checkout redux-riot
-npm install
-npm run start-prod
-```
-
-##### Size stats
-- Build folder: **41kb**
-- app.js: **29.8kb**
+## Running prod
+- `npm run start-prod`

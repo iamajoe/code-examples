@@ -1,0 +1,18 @@
+.icon {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 16px;
+    height: 16px;
+
+    &.icon-comment {
+        background-image: url('src/styles/assets/icon/comment.svg');
+    }
+
+    &.icon-favorite {
+        background-image: url('src/styles/assets/icon/up.svg');
+    }
+
+    &.icon-down {
+        background-image: url('src/styles/assets/icon/down.svg');
+    }
+}

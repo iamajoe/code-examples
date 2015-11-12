@@ -1,10 +1,4 @@
-/src
-/build
-/config
-/tasks
+.DS_Store
 /node_modules
-/package.json
-/bower.json
-.editorconfig
-.jshintrc
-.jscsrc
+npm-debug.log
+config/config.json

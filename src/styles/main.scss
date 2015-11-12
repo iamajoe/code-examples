@@ -1,0 +1,29 @@
+@import './normalize.scss';
+@import './vars.scss';
+
+/* Apply a natural box layout model to all elements */
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+body {
+    background: $neutral-3;
+    font-family: 'Exo', sans-serif;
+}
+
+/* Truncate */
+.truncate {
+    word-wrap: normal;
+    overflow-wrap: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@import './icon.scss';
+@import './thumb.scss';
+@import './loading.scss';
