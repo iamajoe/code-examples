@@ -22,6 +22,8 @@ npm run start-prod
 
 ### Redux + Riot.js
 
+***Disclaimer:*** The structure and dependencies aren't exactly the same since this branch uses Mout and Bluebird (for example).
+
 ```bash
 git checkout redux-riot
 npm install
@@ -29,5 +31,5 @@ npm run start-prod
 ```
 
 ##### Size stats
-- Build folder: **41kb**
-- app.js: **29.8kb**
+- Build folder: **143kb**
+- app.js: **110kb**
