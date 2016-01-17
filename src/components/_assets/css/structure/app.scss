@@ -1,6 +1,6 @@
 /* TODO: What about responsive? */
 
-app {
+body {
     & .header,
     & .posts-wrapper {
         max-width: $max-wrapper-width;

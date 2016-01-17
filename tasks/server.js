@@ -7,9 +7,6 @@ module.exports = function (grunt) {
         express   = require('express'),
         webFolder = path.resolve(path.join('../', 'build'));
 
-    // Load all grunt tasks in node_modules
-    grunt.file.expand('../node_modules/grunt-*/tasks').forEach(grunt.loadTasks);
-
     // The config
     grunt.initConfig({});
 
@@ -77,8 +74,8 @@ module.exports = function (grunt) {
         }
 
         // Effectively listen
-        site.listen(8000, 'localhost');
-        console.log('Listening on http://localhost:8000');
+        site.listen(8000, '0.0.0.0');
+        console.log('Listening on http://0.0.0.0:8000');
 
         // Don't let the process die
         this.async();

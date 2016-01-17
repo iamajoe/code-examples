@@ -3,12 +3,10 @@ module.exports = function (grunt) {
     'use strict';
 
     var isProd = process.argv[1] === 'prod';
-    var webpack = require('webpack');
     var fs = require('fs');
-    var path = require('path');
+    var rm = require('rimraf');
+    var webpack = require('webpack');
     var mapping = require('../config/mapping.js');
-    var rimraf = require('rimraf').sync;
-    var oldConfig;
 
     // Load all grunt tasks in node_modules
     grunt.file.expand('../node_modules/grunt-*/tasks').forEach(grunt.loadTasks);
@@ -36,7 +34,15 @@ module.exports = function (grunt) {
                 watch: !isProd,
                 debug: !isProd,
                 resolve: {
-                    modulesDirectories: ['./', 'node_modules', 'bower_components', 'src'],
+                    modulesDirectories: [
+                        './',
+                        'node_modules',
+                        'bower_components',
+                        'src',
+                        'src/utils',
+                        'src/modules/utils',
+                        'src/components/utils'
+                    ],
                     alias: mapping
                 },
                 module: {
@@ -57,6 +63,8 @@ module.exports = function (grunt) {
                         exclude: /(node_modules|bower_components)/
                     }]
                 },
+                externals: {
+                },
                 plugins: isProd && [
                     new webpack.optimize.DedupePlugin()
                 ]
@@ -66,13 +74,7 @@ module.exports = function (grunt) {
             target: {
                 files: {
                     '../build/app.scss': [
-                        '../src/styles/main.scss',
-                        '../src/components/**/*.scss',
-                        '../src/components/**/*.sass',
-                        '../src/components/**/*.css',
-                        '../src/structure/**/*.scss',
-                        '../src/structure/**/*.sass',
-                        '../src/structure/**/*.css'
+                        '../src/components/_assets/css/main.scss'
                     ]
                 }
             }
@@ -87,6 +89,24 @@ module.exports = function (grunt) {
                 sourceMap: !isProd
             }
         },
+        autoprefixer: {
+            target: {
+                files: {
+                    '../build/app.css': '../build/app.css'
+                }
+            },
+            options: {
+                browsers: ['last 2 versions', 11],
+                diff: !isProd
+            }
+        },
+        pixrem: {
+            target: {
+                files: {
+                    '../build/app.css': '../build/app.css'
+                }
+            }
+        },
         cssmin: {
             target: {
                 files: {
@@ -95,6 +115,9 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
+            mangle: {
+                except: []
+            },
             target: {
                 files: {
                     '../build/app.js': ['../build/app.js']
@@ -104,78 +127,65 @@ module.exports = function (grunt) {
         copy: {
             main: {
                 files: [
-                    // includes files within path
-                    { expand: true, cwd: '../src', src: ['./**/assets/!(scss|sass|css|tmpl)/**/*'], dest: '../build/src/' }
+                    { expand: true, cwd: '../src/components/_assets/html', src: ['index.html'], dest: '../build/' },
+                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.svg'], dest: '../build/components/' },
+                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.png'], dest: '../build/components/' },
+                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.gif'], dest: '../build/components/' },
+                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.jpg'], dest: '../build/components/' },
+                    { expand: true, cwd: '../src/modules', src: ['**/_assets/**/*'], dest: '../build/modules/' },
+                    { expand: true, cwd: '../src/components/_assets/ico', src: ['*.ico'], dest: '../build/' },
+                    // Outdated browser
+                    {
+                        expand: true,
+                        cwd: '../node_modules/outdated-browser/outdatedbrowser',
+                        src: ['lang/en.html'],
+                        dest: '../build/outdatedbrowser'
+                    }
+                ]
+            }
+        },
+        svgmin: {
+            options: {
+                plugins: [
+                    { removeViewBox: true },
+                    { removeUselessStrokeAndFill: true },
+                    { removeEmptyAttrs: true },
+                    { collapseGroups: true },
+                    { minifyStyles: true },
+                    { removeMetadata: true },
+                    { removeTitle: true },
+                    { removeUnkownsAndDefaults: true },
+                    { removeUselessDefs: true },
+                    { removeUselessStrokeAndFill: true }
+                ]
+            },
+            target: {
+                files: [
+                    { expand: true, cwd: '../build', src: ['**/*.svg'], dest: '../build/' }
                 ]
             }
         }
     });
 
-    // Set app
-    grunt.registerTask('set_app', 'Sets app', function () {
-        // No need to go further if prod
-        if (isProd) {
-            return;
-        }
-
-        var dstPath = path.resolve('../build/src');
-        var srcPath = path.resolve(path.join('../src'));
-
-        try {
-            fs.lstatSync(dstPath);
-        } catch (err) {
-            fs.symlinkSync(srcPath, dstPath);
-        }
-    });
-
     // Remove old files
     grunt.registerTask('remove_old_files', 'Remove old files', function () {
-        if (fs.existsSync('../build/src')) {
-            try {
-                fs.unlinkSync('../build/src');
-            } catch (err) {
-                rimraf('../build/src');
-            }
-        }
-        fs.existsSync('../build/app.css.map') && fs.unlinkSync('../build/app.css.map');
-        fs.existsSync('../build/app.js.map') && fs.unlinkSync('../build/app.js.map');
-        fs.existsSync('../build/app.css') && fs.unlinkSync('../build/app.css');
-        fs.existsSync('../build/app.js') && fs.unlinkSync('../build/app.js');
-    });
-
-    // Force it to be prod in the config
-    grunt.registerTask('force_config', 'Force config', function () {
-        oldConfig = JSON.parse(fs.readFileSync('../config/config.json'));
-
-        var keys = Object.keys(oldConfig);
-        var newConfig = {};
-        var i;
-
-        // Copy the object
-        for (i = 0; i < keys.length; i += 1) {
-            newConfig[keys[i]] = oldConfig[keys[i]];
-        }
-
-        // Modify what should be different
-        newConfig.env = isProd ? 'prod' : 'dev';
-
-        // Save the file
-        fs.writeFileSync('../config/config.json', JSON.stringify(newConfig, null, ''));
-    });
-
-    // Unforce config
-    grunt.registerTask('unforce_config', 'Unforce config', function () {
-        fs.writeFileSync('../config/config.json', JSON.stringify(oldConfig, null, 4));
+        var done = this.async();
+        rm('../build/*', done);
     });
 
     // Clean temporaries done for the build
     grunt.registerTask('clean_build', 'Clean temporaries', function () {
         fs.existsSync('../build/app.scss') && fs.unlinkSync('../build/app.scss');
+        fs.existsSync('../build/app.css.diff') && fs.unlinkSync('../build/app.css.diff');
     });
 
     // The task...
     grunt.registerTask('build',
-       isProd ? ['force_config', 'remove_old_files', 'webpack', 'sass_globbing', 'sass', 'cssmin', 'uglify', 'copy', 'unforce_config', 'clean_build']
-       : ['force_config', 'remove_old_files', 'webpack', 'set_app', 'sass_globbing', 'sass', 'unforce_config', 'clean_build']
+       isProd ? ['remove_old_files', 'webpack', 'sass_globbing', 'sass',
+                 'cssmin', 'uglify', 'copy',
+                 'clean_build']
+       : ['remove_old_files', 'webpack', 'sass_globbing', 'sass',
+          'copy',
+          'clean_build']
    );
 };

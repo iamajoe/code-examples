@@ -1,29 +1,21 @@
 'use strict';
-import { getQuery, dispatchAction } from 'stores/postsStore.js';
+
+import Promise from 'bluebird';
+import { addView, removeView } from 'baseActions.js';
+import store from './store.js';
 
 // -----------------------------------------
 // VARS
 
 // -----------------------------------------
-// PUBLIC FUNCTIONS
+// FUNCTIONS
 
 /**
- * Fetch all posts
+ * Fetches the query
  * @param  {string} query
  * @return {promise}
  */
-let fetchAll = (query) => {
-    // Maybe the query is the same already!
-    if (getQuery() === query) {
-        return;
-    }
-
-    // Change the query
-    dispatchAction({ type: 'CHANGE_QUERY', query });
-
-    // Set loading
-    dispatchAction({ type: 'UPDATE_POSTS', isLoading: true });
-
+let fetchQuery = (query) => {
     // Just to get a promise
     let promise = new Promise((resolve, reject) => {
         // Make the request
@@ -44,11 +36,33 @@ let fetchAll = (query) => {
         xhr.send();
     });
 
+    return promise;
+};
+
+/**
+ * Change query of all posts
+ * @param  {string} query
+ */
+var changeQuery = (query) => {
+    // Maybe the query is the same already!
+    if (store.getState().query === query) {
+        return;
+    }
+
+    // Get the default query
+    query = query || store.getState().query;
+
+    // Change the query
+    store.dispatchAction({ type: 'CHANGE_QUERY', query });
+
+    // Set loading
+    store.dispatchAction({ type: 'UPDATE_POSTS', isLoading: true });
+
     // Go on with the promise
-    promise
+    fetchQuery(query)
     .then(fullData => {
         // Maybe a new query was done!
-        if (getQuery() !== query) {
+        if (store.getState().query !== query) {
             return;
         }
 
@@ -56,26 +70,25 @@ let fetchAll = (query) => {
         let data = fullData.data.children.map(val => val.data);
 
         // Finally resolve and dispatch
-        dispatchAction({ type: 'UPDATE_POSTS', data });
+        store.dispatchAction({ type: 'UPDATE_POSTS', data });
     })
     .catch(err => {
         // Maybe a new query was done!
-        if (getQuery() !== query) {
+        if (store.getState().query !== query) {
             return;
         }
 
         // Error!
-        dispatchAction({ type: 'UPDATE_POSTS', err: err });
+        store.dispatchAction({ type: 'UPDATE_POSTS', err: err });
     });
-
-    // Give the promise
-    return promise;
 };
-
-// -----------------------------------------
-// PRIVATE FUNCTIONS
 
 // -----------------------------------------
 // EXPORT
 
-export { fetchAll };
+export default {
+    addView: addView.bind(null, store),
+    removeView: removeView.bind(null, store),
+
+    changeQuery
+};

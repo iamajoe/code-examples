@@ -29,6 +29,8 @@
     "start-prod": "npm run build-prod && npm run server"
   },
   "dependencies": {
+    "mout": "^0.11.1",
+    "bluebird": "~3.1.1",
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
     "riot": "^2.3.1"
