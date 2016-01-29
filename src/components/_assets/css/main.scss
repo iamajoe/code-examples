@@ -1,20 +1,13 @@
 /* Import vendors */
 @import './vendor/normalize.scss';
+@import '../../../../node_modules/outdated-browser/outdatedbrowser/outdatedbrowser.scss';
 
-
-
-/* Import our own global variables */
 @import './general/global.scss';
-
-
-
-/* All main! */
 @import './general/utils.scss';
 @import './general/icons.scss';
 @import './general/loading.scss';
 @import './general/thumb.scss';
 @import './general/general.scss';
-
 
 /* All structure related! */
 @import './structure/app.scss';

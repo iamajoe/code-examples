@@ -1,7 +1,9 @@
-/*jshint node:true, es3:false, latedef:false*/
-module.exports = function (grunt) {
-    'use strict';
+/* eslint-disable strict, no-var */
+'use strict';
 
+require('./utils/babel'); // Setup babel
+
+module.exports = function (grunt) {
     var isProd = process.argv[1] === 'prod';
     var fs = require('fs');
     var rm = require('rimraf');
@@ -49,9 +51,8 @@ module.exports = function (grunt) {
                     loaders: [{
                         test: /\.js?$/,
                         loader: 'babel',
-                        query: !isProd && {
-                            optional: ['runtime'],
-                            stage: 0
+                        query: {
+                            presets: ['es2015']
                         }
                     }, {
                         test: /\.json?$/,
@@ -66,7 +67,10 @@ module.exports = function (grunt) {
                 externals: {
                 },
                 plugins: isProd && [
-                    new webpack.optimize.DedupePlugin()
+                    new webpack.optimize.DedupePlugin(),
+                    new webpack.DefinePlugin({
+                        'process.env.NODE_ENV': '"production"'
+                    })
                 ]
             }
         },
@@ -127,7 +131,7 @@ module.exports = function (grunt) {
         copy: {
             main: {
                 files: [
-                    { expand: true, cwd: '../src/components/_assets/html', src: ['index.html'], dest: '../build/' },
+                    { expand: true, cwd: '../src/components/_assets/html', src: ['index.php'], dest: '../build/' },
                     { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.svg'], dest: '../build/components/' },
                     { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.png'], dest: '../build/components/' },
                     { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.gif'], dest: '../build/components/' },
@@ -175,8 +179,13 @@ module.exports = function (grunt) {
 
     // Clean temporaries done for the build
     grunt.registerTask('clean_build', 'Clean temporaries', function () {
-        fs.existsSync('../build/app.scss') && fs.unlinkSync('../build/app.scss');
-        fs.existsSync('../build/app.css.diff') && fs.unlinkSync('../build/app.css.diff');
+        if (fs.existsSync('../build/app.scss')) {
+            fs.unlinkSync('../build/app.scss');
+        }
+
+        if (fs.existsSync('../build/app.css.diff')) {
+            fs.unlinkSync('../build/app.css.diff');
+        }
     });
 
     // The task...
@@ -189,3 +198,4 @@ module.exports = function (grunt) {
           'clean_build']
    );
 };
+/* eslint-enable strict, no-var */

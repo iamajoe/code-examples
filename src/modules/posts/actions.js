@@ -1,14 +1,13 @@
-'use strict';
-
 import Promise from 'bluebird';
 import { addView, removeView } from 'baseActions.js';
+import appActions from 'modules/app/actions.js';
 import store from './store.js';
 
 // -----------------------------------------
 // VARS
 
 // -----------------------------------------
-// FUNCTIONS
+// PRIVATE FUNCTIONS
 
 /**
  * Fetches the query
@@ -16,10 +15,13 @@ import store from './store.js';
  * @return {promise}
  */
 let fetchQuery = (query) => {
+    let promise;
+    let xhr;
+
     // Just to get a promise
-    let promise = new Promise((resolve, reject) => {
+    promise = new Promise((resolve, reject) => {
         // Make the request
-        let xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest();
         xhr.open('GET', encodeURI(`http://www.reddit.com/r/${query}/.json`));
         xhr.onload = () => {
             if (xhr.status !== 200) {
@@ -39,49 +41,81 @@ let fetchQuery = (query) => {
     return promise;
 };
 
+// -----------------------------------------
+// POST ACTIONS FUNCTIONS
+
 /**
  * Change query of all posts
  * @param  {string} query
  */
-var changeQuery = (query) => {
+let changeQuery = (query) => {
+    let stateQuery = store.getState().query;
+    let newQuery = query;
+
     // Maybe the query is the same already!
-    if (store.getState().query === query) {
+    if (newQuery && stateQuery === newQuery) {
         return;
     }
 
     // Get the default query
-    query = query || store.getState().query;
+    newQuery = newQuery || store.getState().query;
 
     // Change the query
-    store.dispatchAction({ type: 'CHANGE_QUERY', query });
+    store.dispatchAction({ type: 'CHANGE_QUERY', query: newQuery });
 
     // Set loading
     store.dispatchAction({ type: 'UPDATE_POSTS', isLoading: true });
 
     // Go on with the promise
-    fetchQuery(query)
+    fetchQuery(newQuery)
     .then(fullData => {
+        let data;
+
+        stateQuery = store.getState().query;
+
         // Maybe a new query was done!
-        if (store.getState().query !== query) {
+        if (stateQuery !== newQuery) {
             return;
         }
 
         // Get the posts from data
-        let data = fullData.data.children.map(val => val.data);
+        data = fullData.data.children.map(val => val.data);
 
         // Finally resolve and dispatch
         store.dispatchAction({ type: 'UPDATE_POSTS', data });
     })
     .catch(err => {
+        stateQuery = store.getState().query;
+
         // Maybe a new query was done!
-        if (store.getState().query !== query) {
+        if (stateQuery !== newQuery) {
             return;
         }
 
         // Error!
-        store.dispatchAction({ type: 'UPDATE_POSTS', err: err });
+        store.dispatchAction({ type: 'UPDATE_POSTS', err });
     });
 };
+
+// -----------------------------------------
+// APP UPDATE FUNCTIONS
+
+/**
+ * Updates content from app
+ * @param  {object} state
+ */
+let updateOnAction = (state) => {
+    let content = state.content;
+
+    if (!content.params || !content.params.query) {
+        return state;
+    }
+
+    changeQuery(content.params.query);
+};
+
+// Add to the update pool
+appActions.addView({ update: updateOnAction });
 
 // -----------------------------------------
 // EXPORT

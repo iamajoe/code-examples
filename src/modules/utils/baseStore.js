@@ -1,8 +1,6 @@
-'use strict';
-
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import clone from 'mout/lang/clone.js';
+import deepClone from 'mout/lang/deepClone.js';
 
 // -----------------------------------------
 // VARS
@@ -46,7 +44,9 @@ let addView = (self, view) => {
  * @param  {tag} view
  */
 let removeView = (self, view) => {
-    for (let i = 0; i < self.views.length; i += 1) {
+    let i;
+
+    for (i = 0; i < self.views.length; i += 1) {
         if (self.views[i] === view) {
             self.views.splice(i, 1);
             break;
@@ -62,15 +62,15 @@ let removeView = (self, view) => {
  */
 let reducer = (INITIAL_STATE, reducers) => {
     return (state, action) => {
-        state = state || clone(INITIAL_STATE);
+        let newState = state || deepClone(INITIAL_STATE);
 
         // Reset errors
-        state.err = INITIAL_STATE.err;
+        newState.err = INITIAL_STATE.err;
 
         // Get the right reducer for the type
         let typeFn = reducers[action.type];
 
-        return typeFn ? typeFn(state, action) : state;
+        return typeFn ? typeFn(newState, action) : newState;
     };
 };
 
@@ -83,7 +83,7 @@ let reducer = (INITIAL_STATE, reducers) => {
  * @param  {object} reducers
  * @return {store} [description]
  */
-var initStore = (INITIAL_STATE, reducers) => {
+let initStore = (INITIAL_STATE, reducers) => {
     // Finally create the store
     let store = newStore(reducer(INITIAL_STATE, reducers));
     store.views = []; // Used to update when store changes

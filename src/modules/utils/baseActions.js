@@ -1,5 +1,3 @@
-'use strict';
-
 // -----------------------------------------
 // VARS
 
@@ -11,14 +9,14 @@
  * @param  {store} store
  * @param  {tag} view
  */
-var addView = (store, view) => store.addView(view);
+let addView = (store, view) => store.addView(view);
 
 /**
  * Removes view from the actions
  * @param  {store} store
  * @param  {tag} view
  */
-var removeView = (store, view) => store.removeView(view);
+let removeView = (store, view) => store.removeView(view);
 
 // -----------------------------------------
 // EXPORT

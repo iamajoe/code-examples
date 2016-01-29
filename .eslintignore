@@ -1,0 +1,7 @@
+./src/utils/outdatedbrowser.js
+**/*.ico
+**/*.png
+**/*.gif
+**/*.jpg
+**/*.html
+**/*.php

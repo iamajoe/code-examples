@@ -1,9 +1,14 @@
-'use strict';
-
 import riot from 'riot';
 import { onUpdateComp } from 'baseComponent.js';
 import actions from 'modules/posts/actions.js';
-import './postItem.js';
+
+/**
+ * On update handler
+ * @param  {tag} self
+ * @param  {*} opts
+ * @param  {object} state
+ */
+let onUpdate = (self, opts, state) => onUpdateComp(self, state);
 
 /**
  * On mount handler
@@ -11,35 +16,29 @@ import './postItem.js';
  * @param  {*} opts
  */
 let onMount = (self, opts) => {
-    actions.addView(self);
+    // Set update method
+    self.on('update', onUpdate.bind(null, self, opts));
 
-    // Mount items
-    riot.mount('post-item');
+    actions.addView(self);
 };
 
 /**
  * On unmount handler
+ * @param  {tag} self
  */
 let onUnmount = (self) => actions.removeView(self);
-
-/**
- * On update handler
- * @param  {object} state
- */
-let onUpdate = (self, state) => onUpdateComp(self, state);
 
 // -----------------------------------------
 // Initialize
 
 /**
  * Initialize
- * @param  {object} opts
+ * @param  {*} opts
  */
 let init = function (opts) {
     // Set events for the view
-    this.on('mount', onMount.bind(null, this));
+    this.on('mount', onMount.bind(null, this, opts));
     this.on('unmount', onUnmount.bind(null, this));
-    this.on('update', onUpdate.bind(null, this));
 };
 
 /**
@@ -47,8 +46,19 @@ let init = function (opts) {
  */
 riot.tag('posts',
     `
-    <div class="loading {is-loading: this.data.isLoading}"></div>
-    <post-item each={this.data.posts}></post-item>
+    <div class="loading {is-loading: data.isLoading }"></div>
+    <div class="post-item" each="{ data.posts }">
+        <div class="thumb { no-thumb: !thumbnail } post-thumb" style="{ !!thumbnail ? 'background-image:url(' + thumbnail + ')' : '' }"></div>
+        <div class="post-info">
+            <div class="post-author">{ author }</div>
+            <div class="truncate post-desc">{ title }</div>
+            <ul class="post-social">
+                <li><div class="icon icon-comment"></div>{ num_comments } comments</li>
+                <li><div class="icon icon-favorite"></div>{ ups } ups</li>
+                <li><div class="icon icon-down"></div>{ downs } downs</li>
+            </ul>
+        </div>
+    </div>
     `,
 
     init

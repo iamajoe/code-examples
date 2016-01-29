@@ -1,13 +1,10 @@
-'use strict';
-
 import { initStore } from 'baseStore.js';
-import routeStore from 'modules/route/store.js';
 
 // -----------------------------------------
 // VARS
 
 const INITIAL_STATE = {
-    query: 'funny',
+    query: null,
     err: null,
     isLoading: false,
     posts: []
@@ -23,16 +20,14 @@ const INITIAL_STATE = {
  * @return {object}
  */
 let changeQuery = (state, action) => {
-    state.query = action.query || state.query;
+    let newState = state;
+
+    newState.query = action.query || newState.query;
 
     // Reset state
-    state.isLoading = INITIAL_STATE.isLoading;
+    newState.isLoading = INITIAL_STATE.isLoading;
 
-    // Set the route
-    // Redux doesn't accept a dispatch at this point
-    routeStore.setRoute({ route: '/search/' + state.query });
-
-    return state;
+    return newState;
 };
 
 /**
@@ -42,24 +37,29 @@ let changeQuery = (state, action) => {
  * @return {object}
  */
 let updatePosts = (state, action) => {
+    let newState = state;
+    let hasThumbnail;
+    let posts;
+    let thumb;
+
     // Maybe there was an error or is still loading
     if (!!action.err || !!action.isLoading) {
-        state.err = action.err;
-        state.isLoading = !!action.isLoading;
+        newState.err = action.err;
+        newState.isLoading = !!action.isLoading;
     }
 
     // Reset state
-    state.isLoading = INITIAL_STATE.isLoading;
+    newState.isLoading = INITIAL_STATE.isLoading;
 
     // Action needed!
     if (!action || !action.data) {
-        return state;
+        return newState;
     }
 
     // Get the data that interests us
-    let posts = action.data.map((val = {}) => {
-        let thumb = val.thumbnail;
-        let hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
+    posts = action.data.map((val = {}) => {
+        thumb = val.thumbnail;
+        hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
 
         return {
             permalink: val.permalink,
@@ -73,15 +73,15 @@ let updatePosts = (state, action) => {
     }).filter(val => !!val.permalink);
 
     // Finally set the data
-    state.posts = posts;
+    newState.posts = posts;
 
-    return state;
+    return newState;
 };
 
 // -----------------------------------------
 // Initialize store
 
-var store = initStore(INITIAL_STATE, {
+let store = initStore(INITIAL_STATE, {
     'CHANGE_QUERY': changeQuery,
     'UPDATE_POSTS': updatePosts
 });
