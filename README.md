@@ -8,7 +8,7 @@ To test you need to clone and follow the next instructions...
 
 **NOTE:** For all examples node is needed
 
-### Backbone + Bedrock
+### Backbone + Bedrock (outdated at the moment)
 
 ```bash
 git checkout bedrock
@@ -22,14 +22,15 @@ npm run start-prod
 
 ### Redux + Riot.js
 
-***Disclaimer:*** The structure and dependencies aren't exactly the same since this branch uses Mout and Bluebird (for example).
+***Disclaimer:*** The structure and dependencies aren't exactly the same since this is the only updated branch.
 
 ```bash
 git checkout redux-riot
 npm install
-npm run start-prod
+npm run build prod
+npm run server
 ```
 
 ##### Size stats
-- Build folder: **143kb**
-- app.js: **110kb**
+- Build folder: **135.4kb**
+- app.js: **122.5kb**
