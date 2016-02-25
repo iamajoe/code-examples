@@ -6,8 +6,11 @@ The app retrieves data from reddit and presents it.
 
 To test you need to clone and follow the next instructions...
 
-***Disclaimer:*** The structure and dependencies aren't exactly the same since this is the only updated branch.
 **NOTE:** For all examples node is needed.
+
+#### Disclaimer
+The structure and dependencies aren't exactly the same since this is the only updated branch.
+For example, ```Backbone``` doesn't have font-awesome icons.
 
 ### Backbone
 
@@ -33,5 +36,5 @@ npm run server
 ```
 
 ##### Size stats
-- Build folder: **135.4kb**
-- app.js: **122.5kb**
+- Build folder: **795kb**
+- app.js: **212kb**
