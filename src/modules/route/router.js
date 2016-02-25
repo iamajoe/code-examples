@@ -1,23 +1,24 @@
-import { init, setRoute, updateOnAction } from 'baseRoute.js';
+import { init, setRoute, updateOnAction } from 'bedrock/router';
 import appActions from 'modules/app/actions.js';
 import rootRoutes from './modules/root.js';
 
 // -----------------------------------------
 // VARS
 
-let allRoutes = [].concat(rootRoutes);
+const allRoutes = [].concat(rootRoutes);
 
 // -----------------------------------------
 // INITIALIZE
 
 // Wait for the store to initialize
-init(allRoutes, appActions.getContent);
+init(allRoutes, (appActions.getState()).content);
 
 // Add to the update pool
-let update = updateOnAction.bind(null, allRoutes);
-appActions.addView({ update });
+appActions.addView({
+    update: state => updateOnAction(allRoutes, state)
+});
 
 // -----------------------------------------
 // EXPORT
 
-export default setRoute.bind(null, allRoutes);
+export default (route) => setRoute(allRoutes, route);

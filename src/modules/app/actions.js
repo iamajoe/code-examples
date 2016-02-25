@@ -1,4 +1,3 @@
-import { addView, removeView } from 'baseActions.js';
 import store from './store.js';
 
 // -----------------------------------------
@@ -10,21 +9,18 @@ import store from './store.js';
 /**
  * Sets content of app
  */
-let setContent = (action) => {
+const setContent = (action) => {
     store.dispatchAction({ type: 'SET_CONTENT', content: action });
 };
-
-/**
- * Gets content of app
- */
-let getContent = () => store.getState().content;
 
 // -----------------------------------------
 // EXPORT
 
 export default {
-    addView: addView.bind(null, store),
-    removeView: removeView.bind(null, store),
+    addView: view => store.addView(view),
+    removeView: view => store.removeView(view),
+    getInitial: store.getInitial,
+    getState: store.getState,
 
-    getContent, setContent
+    setContent
 };

@@ -1,7 +1,7 @@
 .post-item {
     display: block;
-    background: $neutral-3;
-    border-bottom: 1px solid $neutral;
+    background: $neutral-90-color;
+    border-bottom: 1px solid $neutral-80-color;
     font-size: 0; /* So that inline block works without margins */
     cursor: pointer;
 
@@ -36,7 +36,7 @@
     & .post-author {
         font-weight: 700;
         font-size: 16px;
-        color: $primary;
+        color: $primary-50-color;
         margin: 0;
     }
 
@@ -48,7 +48,7 @@
     & .post-social {
         margin: 10px 0 0;
         padding: 0;
-        color: $neutral-2;
+        color: $neutral-50-color;
 
         & li {
             display: inline-block;
@@ -61,8 +61,7 @@
             margin-left: 22px;
         }
 
-        & .icon {
-            float: left;
+        & .icon-wrapper {
             margin-right: 8px;
         }
     }

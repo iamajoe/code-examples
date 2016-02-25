@@ -1,201 +1,150 @@
-/* eslint-disable strict, no-var */
+/* eslint-disable strict */
 'use strict';
+/* eslint-enable strict */
 
-require('./utils/babel'); // Setup babel
+/* eslint-disable no-var */
+var fs = require('fs-extra');
+var path = require('path');
+var Promise = require('bluebird');
+var env = process.argv[2];
+var rmPromise = Promise.promisify(fs.remove);
 
-module.exports = function (grunt) {
-    var isProd = process.argv[1] === 'prod';
-    var fs = require('fs');
-    var rm = require('rimraf');
-    var webpack = require('webpack');
-    var mapping = require('../config/mapping.js');
+var cwd = process.cwd();
+var tasksPath = 'bedrock/tasks';
+var srcPath = path.join(cwd, 'src');
+var buildPath = path.join(cwd, 'build');
 
-    // Load all grunt tasks in node_modules
-    grunt.file.expand('../node_modules/grunt-*/tasks').forEach(grunt.loadTasks);
+var newPromise;
+var bundlerFn;
+var logTask;
+var fileFn;
+var cssFn;
+/* eslint-enable no-var */
 
-    // The config
-    grunt.initConfig({
-        webpack: {
-            build: {
-                // webpack options
-                entry: '../src/bootstrap.js',
-                output: {
-                    path: '../build/',
-                    filename: 'app.js'
-                },
-                // TODO: Source map not working as it should
-                devtool: !isProd && 'source-map',
-                stats: {
-                    // Configure the console output
-                    colors: true,
-                    modules: true,
-                    reasons: true
-                },
-                target: 'web',
-                cache: isProd,
-                watch: !isProd,
-                debug: !isProd,
-                resolve: {
-                    modulesDirectories: [
-                        './',
-                        'node_modules',
-                        'bower_components',
-                        'src',
-                        'src/utils',
-                        'src/modules/utils',
-                        'src/components/utils'
-                    ],
-                    alias: mapping
-                },
-                module: {
-                    loaders: [{
-                        test: /\.js?$/,
-                        loader: 'babel',
-                        query: {
-                            presets: ['es2015']
-                        }
-                    }, {
-                        test: /\.json?$/,
-                        loader: 'json',
-                        exclude: /(node_modules|bower_components)/
-                    }, {
-                        test: /\.html?$/,
-                        loader: 'raw',
-                        exclude: /(node_modules|bower_components)/
-                    }]
-                },
-                externals: {
-                },
-                plugins: isProd && [
-                    new webpack.optimize.DedupePlugin(),
-                    new webpack.DefinePlugin({
-                        'process.env.NODE_ENV': '"production"'
-                    })
-                ]
-            }
-        },
-        sass_globbing: {
-            target: {
-                files: {
-                    '../build/app.scss': [
-                        '../src/components/_assets/css/main.scss'
-                    ]
-                }
-            }
-        },
-        sass: {
-            target: {
-                files: {
-                    '../build/app.css': '../build/app.scss'
-                }
-            },
-            options: {
-                sourceMap: !isProd
-            }
-        },
-        autoprefixer: {
-            target: {
-                files: {
-                    '../build/app.css': '../build/app.css'
-                }
-            },
-            options: {
-                browsers: ['last 2 versions', 11],
-                diff: !isProd
-            }
-        },
-        pixrem: {
-            target: {
-                files: {
-                    '../build/app.css': '../build/app.css'
-                }
-            }
-        },
-        cssmin: {
-            target: {
-                files: {
-                    '../build/app.css': ['../build/app.css']
-                }
-            }
-        },
-        uglify: {
-            mangle: {
-                except: []
-            },
-            target: {
-                files: {
-                    '../build/app.js': ['../build/app.js']
-                }
-            }
-        },
-        copy: {
-            main: {
-                files: [
-                    { expand: true, cwd: '../src/components/_assets/html', src: ['index.php'], dest: '../build/' },
-                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.svg'], dest: '../build/components/' },
-                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.png'], dest: '../build/components/' },
-                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.gif'], dest: '../build/components/' },
-                    { expand: true, cwd: '../src/components', src: ['**/_assets/**/*.jpg'], dest: '../build/components/' },
-                    { expand: true, cwd: '../src/modules', src: ['**/_assets/**/*'], dest: '../build/modules/' },
-                    { expand: true, cwd: '../src/components/_assets/ico', src: ['*.ico'], dest: '../build/' },
-                    // Outdated browser
-                    {
-                        expand: true,
-                        cwd: '../node_modules/outdated-browser/outdatedbrowser',
-                        src: ['lang/en.html'],
-                        dest: '../build/outdatedbrowser'
-                    }
-                ]
-            }
-        },
-        svgmin: {
-            options: {
-                plugins: [
-                    { removeViewBox: true },
-                    { removeUselessStrokeAndFill: true },
-                    { removeEmptyAttrs: true },
-                    { collapseGroups: true },
-                    { minifyStyles: true },
-                    { removeMetadata: true },
-                    { removeTitle: true },
-                    { removeUnkownsAndDefaults: true },
-                    { removeUselessDefs: true },
-                    { removeUselessStrokeAndFill: true }
-                ]
-            },
-            target: {
-                files: [
-                    { expand: true, cwd: '../build', src: ['**/*.svg'], dest: '../build/' }
-                ]
-            }
-        }
-    });
+// Setup babel
+require(path.join(tasksPath, 'utils/babel.js'));
 
-    // Remove old files
-    grunt.registerTask('remove_old_files', 'Remove old files', function () {
-        var done = this.async();
-        rm('../build/*', done);
-    });
+/**
+ * Log the task
+ * @param  {string} task
+ */
+logTask = (task) => {
+    let taskCmLine = '';
 
-    // Clean temporaries done for the build
-    grunt.registerTask('clean_build', 'Clean temporaries', function () {
-        if (fs.existsSync('../build/app.scss')) {
-            fs.unlinkSync('../build/app.scss');
-        }
+    // Lets create the comment line
+    while (taskCmLine.length < 60) {
+        taskCmLine += '#';
+    }
 
-        if (fs.existsSync('../build/app.css.diff')) {
-            fs.unlinkSync('../build/app.css.diff');
-        }
-    });
-
-    // The task...
-    grunt.registerTask('build',
-       isProd ? ['remove_old_files', 'webpack', 'sass_globbing', 'sass',
-                 'cssmin', 'uglify', 'copy',
-                 'clean_build']
-       : ['remove_old_files', 'webpack', 'sass_globbing', 'sass',
-          'copy',
-          'clean_build']
-   );
+    /* eslint-disable no-console */
+    console.log(`\n${taskCmLine}\n# ${task} \n${taskCmLine}\n`);
+    /* eslint-enable no-console */
 };
-/* eslint-enable strict, no-var */
+
+/**
+ * Sets a new promise
+ * @return {promise}
+ */
+newPromise = () => (new Promise((resolve) => resolve()));
+
+/**
+ * File function
+ * @return {promise}
+ */
+fileFn = () => {
+    return newPromise()
+    // Run file task
+    .then(() => logTask('Run file tasks'))
+    .then(() => {
+        const fileTask = require(path.join(tasksPath, 'file.js'));
+        const files = [
+            {
+                cwd: 'node_modules/bedrock/src',
+                src: '**/_assets/**/*.*',
+                ignore: ['**/*.scss', '**/*.css', '**/*.php', '**/*.html', '**/*.ico'],
+                dest: buildPath
+            }, {
+                cwd: srcPath,
+                src: '**/_assets/**/*.*',
+                ignore: ['**/*.scss', '**/*.css', '**/*.php', '**/*.html', '**/*.ico'],
+                dest: buildPath
+            }, {
+                cwd: path.join(srcPath, 'containers/_assets/html'),
+                src: 'index.php',
+                dest: buildPath
+            }, {
+                cwd: srcPath,
+                src: 'favicon.ico',
+                dest: buildPath
+            }
+        ];
+
+        return fileTask(files, buildPath);
+    });
+};
+
+/**
+ * Css env function
+ * @return {promise}
+ */
+cssFn = () => {
+    return newPromise()
+    // Remove old files
+    .then(() => logTask('Remove old style files'))
+    .then(() => rmPromise(path.join(buildPath, '*.css')))
+    // Run style task
+    .then(() => logTask('Run style tasks'))
+    .then(() => {
+        const fileTask = require(path.join(tasksPath, 'style.js'));
+        const files = [{
+            src: path.join(srcPath, 'components/_assets/css/main.scss'),
+            dest: path.join(buildPath, 'app.css')
+        }];
+
+        return fileTask(files);
+    });
+};
+
+/**
+ * Bundler env function
+ * @return {promise}
+ */
+bundlerFn = () => {
+    return newPromise()
+    // Remove old files
+    .then(() => logTask('Remove old bundler files'))
+    .then(() => rmPromise(path.join(buildPath, '*')))
+    // Run bundler task
+    .then(() => logTask('Run bundler tasks'))
+    .then(() => {
+        const fileTask = require(path.join(tasksPath, 'bundler.js'));
+        const mappingPath = path.join(cwd, 'config/mapping.js');
+        const files = [{
+            entry: path.join(cwd, 'src', 'bootstrap.js'),
+            output: {
+                path: buildPath
+            },
+            resolve: {
+                root: path.resolve(cwd),
+                extensions: ['', '.js', '.jsx'],
+                modulesDirectories: ['src', 'node_modules'],
+                alias: fs.existsSync(mappingPath) && require(mappingPath)
+            }
+        }];
+
+        return fileTask(files);
+    })
+    // Run style task
+    .then(cssFn);
+};
+
+/**
+* Take care of running the task
+*/
+newPromise()
+// Set the tasks per env
+.then(env === 'css' ? cssFn : bundlerFn)
+// Take care of files
+.then(env !== 'css' ? fileFn : () => {})
+// Force to exit the process
+.then(process.exit);

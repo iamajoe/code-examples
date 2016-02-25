@@ -1,15 +1,16 @@
-/* Import vendors */
-@import './vendor/normalize.scss';
-@import '../../../../node_modules/outdated-browser/outdatedbrowser/outdatedbrowser.scss';
+// Vendor
+@import '../../../../node_modules/bedrock/src/_assets/css/main.scss';
 
-@import './general/global.scss';
-@import './general/utils.scss';
-@import './general/icons.scss';
-@import './general/loading.scss';
-@import './general/thumb.scss';
-@import './general/general.scss';
+@import 'general/global.scss';
+@import 'general/utils.scss';
+@import 'general/icons.scss';
+@import 'general/loading.scss';
+@import 'general/thumb.scss';
+@import 'general/general.scss';
 
-/* All structure related! */
-@import './structure/app.scss';
-@import './structure/posts.scss';
-@import './structure/post_item.scss';
+// Components
+@import '../../posts/_assets/css/posts.scss';
+@import '../../posts/_assets/css/post_item.scss';
+
+// Containers
+@import '../../../containers/_assets/css/containers.scss';

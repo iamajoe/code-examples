@@ -1,10 +1,16 @@
-$max-wrapper-width: 800px;
-
 /////////////////////////////
 // Colors
 
-$inverse: #fff;
-$primary: #666;
-$neutral: #dbdbec;
-$neutral-2: #636475;
-$neutral-3: #f4f7fa;
+$neutral-50-color: #636475;
+$neutral-80-color: #dbdbec;
+$neutral-90-color: #f4f7fa;
+$neutral-100-color: #fff;
+
+$primary-50-color: #666;
+
+$inverse: $neutral-100-color;
+
+/////////////////////////////
+// Sizes
+
+$max-wrapper-width: 800px;

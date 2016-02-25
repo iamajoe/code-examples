@@ -1,14 +1,16 @@
-import riot from 'riot';
+import { riot } from 'bedrock/componentRiot';
+import outdatedBrowser from 'bedrock/outdatedbrowser';
 import appActions from 'modules/app/actions.js';
-import './posts.js';
+import 'components/posts/posts.js';
 
 /**
  * Sets a new query
  * @param  {tag} self
  * @param  {event} evt
  */
-let onKeyUp = (self, evt) => {
-    /* eslint-disable no-param-reassign */
+const onKeyUp = (self, evt) => {
+    evt.stopPropagation();
+
     // Throttler needed for better performance
     // and there is no need to constantly request
     if (self.throttler) {
@@ -16,7 +18,7 @@ let onKeyUp = (self, evt) => {
     }
 
     self.throttler = setTimeout(() => {
-        let query = evt.target.value;
+        const query = evt.target.value;
 
         // Request new data
         if (!!query) {
@@ -26,14 +28,16 @@ let onKeyUp = (self, evt) => {
             });
         }
     }, 1000);
-    /* eslint-enable no-param-reassign*/
 };
 
 /**
  * On mount handler
  * @param  {tag} self
  */
-let onMount = self => {
+const onMount = self => {
+    // Set outdated browser
+    outdatedBrowser({ lowerThan: 'IE11', languagePath: '' });
+
     // Mount child
     // TODO: Why? Mounting works but won't do the each
     // On other project for some reason works without
@@ -47,13 +51,13 @@ let onMount = self => {
  * Initialize
  * @param  {*} opts
  */
-let init = function () {
+const init = function (opts) {
     // Set events
-    this.on('mount', onMount.bind(null, this));
+    this.on('mount', () => onMount(this, opts));
 
     // Set DOM events functions
     this.onSubmit = evt => evt.preventDefault();
-    this.onKeyUp = onKeyUp.bind(null, this);
+    this.onKeyUp = evt => onKeyUp(this, evt);
 };
 
 /**

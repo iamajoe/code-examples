@@ -1,5 +1,5 @@
+import { actionRequest } from 'bedrock/actions';
 import Promise from 'bluebird';
-import { addView, removeView } from 'baseActions.js';
 import appActions from 'modules/app/actions.js';
 import store from './store.js';
 
@@ -14,7 +14,7 @@ import store from './store.js';
  * @param  {string} query
  * @return {promise}
  */
-let fetchQuery = (query) => {
+const fetchQuery = (query) => {
     let promise;
     let xhr;
 
@@ -48,8 +48,8 @@ let fetchQuery = (query) => {
  * Change query of all posts
  * @param  {string} query
  */
-let changeQuery = (query) => {
-    let stateQuery = store.getState().query;
+const changeQuery = (query) => {
+    const stateQuery = store.getState().query;
     let newQuery = query;
 
     // Maybe the query is the same already!
@@ -63,38 +63,8 @@ let changeQuery = (query) => {
     // Change the query
     store.dispatchAction({ type: 'CHANGE_QUERY', query: newQuery });
 
-    // Set loading
-    store.dispatchAction({ type: 'UPDATE_POSTS', isLoading: true });
-
     // Go on with the promise
-    fetchQuery(newQuery)
-    .then(fullData => {
-        let data;
-
-        stateQuery = store.getState().query;
-
-        // Maybe a new query was done!
-        if (stateQuery !== newQuery) {
-            return;
-        }
-
-        // Get the posts from data
-        data = fullData.data.children.map(val => val.data);
-
-        // Finally resolve and dispatch
-        store.dispatchAction({ type: 'UPDATE_POSTS', data });
-    })
-    .catch(err => {
-        stateQuery = store.getState().query;
-
-        // Maybe a new query was done!
-        if (stateQuery !== newQuery) {
-            return;
-        }
-
-        // Error!
-        store.dispatchAction({ type: 'UPDATE_POSTS', err });
-    });
+    actionRequest(store, fetchQuery.bind(null, newQuery), 'UPDATE_POSTS');
 };
 
 // -----------------------------------------
@@ -104,13 +74,14 @@ let changeQuery = (query) => {
  * Updates content from app
  * @param  {object} state
  */
-let updateOnAction = (state) => {
-    let content = state.content;
+const updateOnAction = (state) => {
+    const content = state.data.content;
 
     if (!content.params || !content.params.query) {
         return state;
     }
 
+    // Change the query
     changeQuery(content.params.query);
 };
 
@@ -121,8 +92,10 @@ appActions.addView({ update: updateOnAction });
 // EXPORT
 
 export default {
-    addView: addView.bind(null, store),
-    removeView: removeView.bind(null, store),
+    addView: view => store.addView(view),
+    removeView: view => store.removeView(view),
+    getInitial: store.getInitial,
+    getState: store.getState,
 
     changeQuery
 };

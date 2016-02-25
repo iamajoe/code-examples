@@ -1,12 +1,11 @@
-import { initStore } from 'baseStore.js';
+import { initStore } from 'bedrock/store';
+import deepClone from 'mout/lang/deepClone.js';
 
 // -----------------------------------------
 // VARS
 
 const INITIAL_STATE = {
     query: null,
-    err: null,
-    isLoading: false,
     posts: []
 };
 
@@ -19,13 +18,10 @@ const INITIAL_STATE = {
  * @param  {object}  action
  * @return {object}
  */
-let changeQuery = (state, action) => {
-    let newState = state;
+const changeQuery = (state, action) => {
+    const newState = deepClone(INITIAL_STATE);
 
     newState.query = action.query || newState.query;
-
-    // Reset state
-    newState.isLoading = INITIAL_STATE.isLoading;
 
     return newState;
 };
@@ -36,28 +32,23 @@ let changeQuery = (state, action) => {
  * @param  {object}  action
  * @return {object}
  */
-let updatePosts = (state, action) => {
-    let newState = state;
+const updatePosts = (state, action) => {
+    const newState = state;
     let hasThumbnail;
     let posts;
     let thumb;
-
-    // Maybe there was an error or is still loading
-    if (!!action.err || !!action.isLoading) {
-        newState.err = action.err;
-        newState.isLoading = !!action.isLoading;
-    }
-
-    // Reset state
-    newState.isLoading = INITIAL_STATE.isLoading;
+    let data;
 
     // Action needed!
-    if (!action || !action.data) {
+    if (!action || !action.data || !action.data.data) {
         return newState;
     }
 
+    // Get the posts from data
+    data = action.data.data.children.map(val => val.data);
+
     // Get the data that interests us
-    posts = action.data.map((val = {}) => {
+    posts = data.map((val = {}) => {
         thumb = val.thumbnail;
         hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
 
@@ -79,14 +70,9 @@ let updatePosts = (state, action) => {
 };
 
 // -----------------------------------------
-// Initialize store
+// EXPORT
 
-let store = initStore(INITIAL_STATE, {
+export default initStore(INITIAL_STATE, {
     'CHANGE_QUERY': changeQuery,
     'UPDATE_POSTS': updatePosts
 });
-
-// -----------------------------------------
-// EXPORT
-
-export default store;

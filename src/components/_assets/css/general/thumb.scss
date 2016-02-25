@@ -3,10 +3,19 @@
     background-size: cover;
     background-position: center center;
 
+    &:not(.no-thumb) {
+        .align-middle-wrapper {
+            display: none;
+        }
+    }
+
     &.no-thumb {
         background-color: $inverse;
-        background-image: url('components/_assets/icon/camera.svg');
         background-size: 40%;
         opacity: 0.6;
+    }
+
+    .icon-wrapper {
+        opacity: 0.25;
     }
 }

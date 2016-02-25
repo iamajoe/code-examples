@@ -13,7 +13,7 @@ body {
     & .header-wrapper {
         position: relative;
         height: 50px;
-        background: $primary;
+        background: $primary-50-color;
         z-index: 1;
     }
 
@@ -42,7 +42,7 @@ body {
         padding: 2px 8px;
         border-color: transparent;
         font-weight: 500;
-        color: $primary;
+        color: $primary-50-color;
         outline: none;
 
         -webkit-transition: max-width 0.15s ease-out;

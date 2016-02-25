@@ -1,16 +1,18 @@
-import { initStore } from 'baseStore.js';
+import { initStore } from 'bedrock/store';
+import deepMixIn from 'mout/object/deepMixIn.js';
 
 // -----------------------------------------
 // VARS
 
 const INITIAL_STATE = {
-    content: {
-        type: '',
-        params: {
-            query: 'funny'
+    data: {
+        content: {
+            type: '',
+            params: {
+                query: 'funny'
+            }
         }
-    },
-    err: null
+    }
 };
 
 // -----------------------------------------
@@ -22,24 +24,17 @@ const INITIAL_STATE = {
  * @param  {object}  action
  * @return {object}
  */
-let setContent = (state, action) => {
-    let newState = state;
-    let content = action.content;
+const setContent = (state, action) => {
+    const content = action.content;
 
-    // Set content
-    newState.content = content;
-
-    return newState;
+    return deepMixIn({}, state, {
+        data: { content }
+    });
 };
-
-// -----------------------------------------
-// Initialize store
-
-let store = initStore(INITIAL_STATE, {
-    'SET_CONTENT': setContent
-});
 
 // -----------------------------------------
 // EXPORT
 
-export default store;
+export default initStore(INITIAL_STATE, {
+    'SET_CONTENT': setContent
+});

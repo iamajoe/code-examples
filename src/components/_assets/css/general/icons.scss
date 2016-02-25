@@ -1,18 +1,26 @@
+.icon-wrapper,
 .icon {
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 16px;
-    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
 
-    &.icon-comment {
-        background-image: url('components/_assets/icon/comment.svg');
+.icon {
+    &,
+    &.icon-small {
+        width: 14px;
+        height: 14px;
     }
 
-    &.icon-favorite {
-        background-image: url('components/_assets/icon/up.svg');
+    &.icon-medium {
+        width: 28px;
+        height: 28px;
     }
 
-    &.icon-down {
-        background-image: url('components/_assets/icon/down.svg');
+    &.icon-large {
+        width: 56px;
+        height: 56px;
     }
 }
+

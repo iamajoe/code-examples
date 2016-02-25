@@ -1,11 +1,11 @@
-import { isIe, isMobile } from 'is.js';
-import riot from 'riot';
-import 'components/app.js';
+import { riot } from 'bedrock/componentRiot';
+import { isIe, isMobile } from 'bedrock/is';
+import 'containers/app.js';
 
 // Wait for the document to be ready
 document.addEventListener('DOMContentLoaded', function () {
-    let bodyEl = document.getElementById('body');
-    let classList = bodyEl.classList;
+    const bodyEl = document.getElementById('body');
+    const classList = bodyEl.classList;
 
     // Remove class no-script
     classList.remove('no-script');

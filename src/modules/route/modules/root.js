@@ -6,7 +6,7 @@ import appActions from 'modules/app/actions.js';
 /**
  * Index
  */
-let index = {
+const index = {
     'type': 'INDEX',
     'url': '/',
     /**
@@ -28,7 +28,7 @@ let index = {
 /**
  * Search
  */
-let search = {
+const search = {
     'type': 'SEARCH',
     'url': '/search/:query',
     /**
@@ -46,8 +46,8 @@ let search = {
      * @param  {function} next
      */
     'onRoute': (route, ctx) => {
-        let params = ctx.params;
-        let type = route.type;
+        const params = ctx.params;
+        const type = route.type;
 
         appActions.setContent({ type, params });
     }
