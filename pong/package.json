@@ -1,0 +1,6 @@
+{
+  "name": "pong",
+  "scripts": {
+    "start": "openfl test neko"
+  }
+}

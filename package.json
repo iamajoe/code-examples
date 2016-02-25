@@ -1,0 +1,8 @@
+{
+  "name": "bedrock-haxe-examples",
+  "version": "1.0.0",
+  "author": "Sendoushi",
+  "dependencies": {
+    "bedrock": "git+ssh://git@github.com/Sendoushi/bedrock-haxe.git"
+  }
+}
