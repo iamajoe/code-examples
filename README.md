@@ -9,8 +9,8 @@ To test you need to clone and follow the next instructions...
 **NOTE:** For all examples node is needed.
 
 #### Disclaimer
-The structure and dependencies aren't exactly the same since this is the only updated branch.
-For example, ```Backbone``` doesn't have font-awesome icons.
+The structure and dependencies aren't exactly the same.
+For example, ```Backbone``` doesn't have font-awesome icons and is deprecated.
 
 ### Backbone
 
