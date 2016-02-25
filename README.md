@@ -6,9 +6,10 @@ The app retrieves data from reddit and presents it.
 
 To test you need to clone and follow the next instructions...
 
-**NOTE:** For all examples node is needed
+***Disclaimer:*** The structure and dependencies aren't exactly the same since this is the only updated branch.
+**NOTE:** For all examples node is needed.
 
-### Backbone + Bedrock (outdated at the moment)
+### Backbone
 
 ```bash
 git checkout bedrock
@@ -20,9 +21,9 @@ npm run start-prod
 - Build folder: **152kb**
 - app.js: **141kb**
 
-### Redux + Riot.js
+***NOTE:*** This branch is completely deprecated.
 
-***Disclaimer:*** The structure and dependencies aren't exactly the same since this is the only updated branch.
+### Redux + Riot.js
 
 ```bash
 git checkout redux-riot
