@@ -19,7 +19,7 @@ const INITIAL_STATE = {
  */
 const loading = (state = false, action) => {
     switch (action.type) {
-    case 'CHANGE_QUERY_LOADING':
+    case 'UPDATE_POSTS_LOADING':
         return action.loading;
     default:
         return state;
@@ -34,7 +34,7 @@ const loading = (state = false, action) => {
  */
 const err = (state = null, action) => {
     switch (action.type) {
-    case 'CHANGE_QUERY_ERR':
+    case 'UPDATE_POSTS_ERR':
         return action.err;
     default:
         return state;
