@@ -38,3 +38,16 @@ npm run server
 ##### Size stats
 - Build folder: **795kb**
 - app.js: **212kb**
+
+### Redux + React
+
+```bash
+git checkout redux-react
+npm install
+npm run build prod
+npm run server
+```
+
+##### Size stats
+- Build folder: **897kb**
+- app.js: **312kb**
