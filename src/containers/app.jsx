@@ -46,10 +46,15 @@ const componentDidMount = (self) => {
     outdatedBrowser({ lowerThan: 'IE11', languagePath: '' });
 
     // Add for the actions update
-    self.unsubscribe = actions.subscribe(() => self.render());
+    self.unsubscribe = actions.subscribe(() => {
+        self.setState(actions.getState());
+    });
 
     // Request first default query
     actions.changeQuery(defaultQuery);
+
+    // Initialize vars
+    self.state = {};
 };
 
 /**
@@ -71,10 +76,10 @@ const componentWillUnmount = (self) => {
 const render = (self) => {
     const onChangeHandler = evt => onChange(self, evt);
     const onSubmit = evt => evt.preventDefault();
+    let posts = self.state && self.state.posts;
 
-    const state = actions.getState();
-    const posts = state.posts;
-    console.log("rendering!!!", posts);
+    // Get an initial
+    posts = posts || actions.getInitial().posts;
 
     return (
     <div>

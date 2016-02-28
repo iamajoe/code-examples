@@ -1,5 +1,5 @@
 import React from 'react';
-import { addIcon } from 'bedrock/icon';
+import { addIcon } from 'bedrock/iconReact';
 
 // -----------------------------------------
 // VARS
@@ -15,16 +15,19 @@ import { addIcon } from 'bedrock/icon';
 const renderPost = (self, post) => {
     const thumbnail = post.thumbnail;
     const thumbClass = !thumbnail ? 'thumb no-thumb post-thumb' : 'thumb post-thumb';
-    const thumbStyle = !!thumbnail && {
-        backgroundImage: 'url(' + thumbnail + ')'
+    const thumbStyle = {
+        backgroundImage: !!thumbnail && 'url(' + thumbnail + ')'
     };
 
     return (
-    <div className="post-item">
+    <div key={post.id} className="post-item">
         <div className={thumbClass} style={thumbStyle}>
             <div className="align-middle-wrapper">
                 <div className="align-middle">
-                    { addIcon('camera', false, 'large') }
+                    { addIcon('camera', {
+                        isInverse: false,
+                        size: 'large'
+                    }) }
                 </div>
             </div>
         </div>
@@ -46,14 +49,13 @@ const renderPost = (self, post) => {
  * @param  {tag} self
  */
 const render = (self) => {
-    console.log("inside render of posts", self.props);
     const loadingClass = !!self.props.loading ? 'loading is-loading' : 'loading';
-    const posts = self.props.list.map((post) => renderPost(self, post));
+    const list = self.props.list.map((post) => renderPost(self, post));
 
     return (
     <div className="posts">
         <div className={loadingClass}></div>
-        { posts }
+        {list}
     </div>
     );
 };

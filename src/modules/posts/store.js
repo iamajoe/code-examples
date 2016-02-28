@@ -80,6 +80,7 @@ const list = (state = INITIAL_STATE.list, action) => {
             hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
 
             return {
+                id: val.id,
                 permalink: val.permalink,
                 thumbnail: hasThumbnail ? thumb : null,
                 author: val.author,
