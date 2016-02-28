@@ -1,5 +1,3 @@
-import store from './store.js';
-
 // -----------------------------------------
 // VARS
 
@@ -9,17 +7,15 @@ import store from './store.js';
 /**
  * Sets content of app
  */
-const setContent = (action) => {
+const setContent = (store, action) => {
     store.dispatch({ type: 'SET_CONTENT', content: action });
 };
 
 // -----------------------------------------
 // EXPORT
 
-export default {
-    subscribe: store.subscribe,
-    getInitial: store.getInitial,
-    getState: store.getState,
-
-    setContent
+export default (store) => {
+    return {
+        setContent: (action) => setContent(store, action)
+    };
 };

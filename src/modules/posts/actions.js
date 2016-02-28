@@ -1,7 +1,5 @@
 import { request } from 'bedrock/actions';
 import Promise from 'bluebird';
-import appActions from 'modules/app/actions.js';
-import store from './store.js';
 
 // -----------------------------------------
 // VARS
@@ -48,48 +46,30 @@ const fetchQuery = (query) => {
  * Change query of all posts
  * @param  {string} query
  */
-const changeQuery = (query) => {
-    const stateQuery = store.getState().query;
-    let newQuery = query;
+const changeQuery = (store, query) => {
+    const state = store.getState();
+    const stateQuery = state.posts.query;
 
     // Maybe the query is the same already!
-    if (newQuery && stateQuery === newQuery) {
+    if (stateQuery === query) {
         return;
     }
 
-    // Get the default query
-    newQuery = newQuery || store.getState().query;
-
     // Change the query
-    store.dispatch({ type: 'CHANGE_QUERY', query: newQuery });
+    store.dispatch({ type: 'CHANGE_POSTS_QUERY', query });
 
     // Go on with the promise
-    request(store, fetchQuery.bind(null, newQuery), 'UPDATE_POSTS');
+    request(store, fetchQuery.bind(null, query), 'UPDATE_POSTS');
 };
 
 // -----------------------------------------
 // APP UPDATE FUNCTIONS
 
-// Add to the update pool
-appActions.subscribe(() => {
-    const state = appActions.getState();
-    const content = state.content;
-
-    if (!content.params || !content.params.query) {
-        return state;
-    }
-
-    // Change the query
-    changeQuery(content.params.query);
-});
-
 // -----------------------------------------
 // EXPORT
 
-export default {
-    subscribe: store.subscribe,
-    getInitial: store.getInitial,
-    getState: store.getState,
-
-    changeQuery
+export default (store) => {
+    return {
+        changeQuery: (action) => changeQuery(store, action)
+    };
 };

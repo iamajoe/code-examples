@@ -1,11 +1,10 @@
-import riot from 'riot';
 import { isIe, isMobile } from 'bedrock/is';
-import 'containers/app.js';
+import { mountApp } from 'containers/app.jsx';
 
 // Wait for the document to be ready
 document.addEventListener('DOMContentLoaded', function () {
-    const bodyEl = document.getElementById('body');
-    const classList = bodyEl.classList;
+    const bodyWrapper = document.getElementById('body-wrapper');
+    const classList = document.body.classList;
 
     // Remove class no-script
     classList.remove('no-script');
@@ -18,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
         classList.add('is-mobile');
     }
 
-    // Mount the app
-    riot.mount('body', 'app');
+    // Mount app
+    mountApp(bodyWrapper);
 
     // Router
-    require('modules/route/router.js');
+    require('route/router.js');
 });

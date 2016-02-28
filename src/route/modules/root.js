@@ -1,4 +1,4 @@
-import appActions from 'modules/app/actions.js';
+import actions from '../../modules/actions.js';
 
 // -----------------------------------------
 // FUNCTIONS
@@ -16,7 +16,7 @@ const index = {
      * @param  {function} next
      */
     'onRoute': () => {
-        appActions.setContent({
+        actions.setContent({
             type: 'SEARCH',
             params: {
                 query: 'funny'
@@ -49,7 +49,7 @@ const search = {
         const params = ctx.params;
         const type = route.type;
 
-        appActions.setContent({ type, params });
+        actions.setContent({ type, params });
     }
 };
 

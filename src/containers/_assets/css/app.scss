@@ -1,60 +1,57 @@
 /* TODO: What about responsive? */
+.header,
+.posts-wrapper {
+    max-width: $max-wrapper-width;
+    min-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+}
 
-body {
-    & .header,
-    & .posts-wrapper {
-        max-width: $max-wrapper-width;
-        min-width: 500px;
-        width: 100%;
-        margin: 0 auto;
+/* Header */
+.header-wrapper {
+    position: relative;
+    height: 50px;
+    background: $primary-50-color;
+    z-index: 1;
+}
+
+.logo,
+form {
+    line-height: 50px;
+}
+
+.logo {
+    float: left;
+    max-width: 50%;
+    font-size: 24px;
+    font-weight: 600;
+    color: $inverse;
+}
+
+form {
+    float: right;
+    width: 300px;
+    text-align: right;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 150px;
+    padding: 2px 8px;
+    border-color: transparent;
+    font-weight: 500;
+    color: $primary-50-color;
+    outline: none;
+
+    -webkit-transition: max-width 0.15s ease-out;
+            transition: max-width 0.15s ease-out;
+
+    &:focus {
+        max-width: 300px;
     }
+}
 
-    /* Header */
-    & .header-wrapper {
-        position: relative;
-        height: 50px;
-        background: $primary-50-color;
-        z-index: 1;
-    }
-
-    & .logo,
-    & form {
-        line-height: 50px;
-    }
-
-    & .logo {
-        float: left;
-        max-width: 50%;
-        font-size: 24px;
-        font-weight: 600;
-        color: $inverse;
-    }
-
-    & form {
-        float: right;
-        width: 300px;
-        text-align: right;
-    }
-
-    & .search-input {
-        width: 100%;
-        max-width: 150px;
-        padding: 2px 8px;
-        border-color: transparent;
-        font-weight: 500;
-        color: $primary-50-color;
-        outline: none;
-
-        -webkit-transition: max-width 0.15s ease-out;
-                transition: max-width 0.15s ease-out;
-
-        &:focus {
-            max-width: 300px;
-        }
-    }
-
-    /* Posts */
-    & .posts-wrapper {
-        padding: 20px 0;
-    }
+/* Posts */
+.posts-wrapper {
+    padding: 20px 0;
 }

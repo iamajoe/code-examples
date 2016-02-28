@@ -13,8 +13,9 @@
     <body class="no-script is-ie">
     <![endif]-->
     <!--[if !IE]> -->
-    <body id="body" class="no-script">
+    <body class="no-script">
     <!-- <![endif]-->
+        <div id="body-wrapper"></div>
     </body>
     <script src="/app.js"></script>
 </html>

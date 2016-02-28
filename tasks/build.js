@@ -145,7 +145,7 @@ bundlerFn = () => {
             }
         }];
 
-        return fileTask(files);
+        return fileTask(files, true);
     })
     // Run style task
     .then(cssFn);

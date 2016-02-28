@@ -1,4 +1,4 @@
 {
     "root": true,
-    "extends": "sds/es6"
+    "extends": "sds/es6-react"
 }
