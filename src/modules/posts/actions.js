@@ -1,4 +1,4 @@
-import { actionRequest } from 'bedrock/actions';
+import { request } from 'bedrock/actions';
 import Promise from 'bluebird';
 import appActions from 'modules/app/actions.js';
 import store from './store.js';
@@ -61,21 +61,19 @@ const changeQuery = (query) => {
     newQuery = newQuery || store.getState().query;
 
     // Change the query
-    store.dispatchAction({ type: 'CHANGE_QUERY', query: newQuery });
+    store.dispatch({ type: 'CHANGE_QUERY', query: newQuery });
 
     // Go on with the promise
-    actionRequest(store, fetchQuery.bind(null, newQuery), 'UPDATE_POSTS');
+    request(store, fetchQuery.bind(null, newQuery), 'UPDATE_POSTS');
 };
 
 // -----------------------------------------
 // APP UPDATE FUNCTIONS
 
-/**
- * Updates content from app
- * @param  {object} state
- */
-const updateOnAction = (state) => {
-    const content = state.data.content;
+// Add to the update pool
+appActions.subscribe(() => {
+    const state = appActions.getState();
+    const content = state.content;
 
     if (!content.params || !content.params.query) {
         return state;
@@ -83,17 +81,13 @@ const updateOnAction = (state) => {
 
     // Change the query
     changeQuery(content.params.query);
-};
-
-// Add to the update pool
-appActions.addView({ update: updateOnAction });
+});
 
 // -----------------------------------------
 // EXPORT
 
 export default {
-    addView: view => store.addView(view),
-    removeView: view => store.removeView(view),
+    subscribe: store.subscribe,
     getInitial: store.getInitial,
     getState: store.getState,
 

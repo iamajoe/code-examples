@@ -1,21 +1,22 @@
-import { riot, updateState } from 'bedrock/componentRiot';
+import riot from 'riot';
+import { updateState } from 'bedrock/component';
 import { addIcon } from 'bedrock/icon';
 import actions from 'modules/posts/actions.js';
 
 /**
  * On update handler
  * @param  {tag} self
- * @param  {*} opts
- * @param  {object} state
  */
-const onUpdate = (self, opts, state) => {
-    const newState = updateState(self.state, state, actions.getInitial());
+const onUpdate = (self) => {
+    const initialState = actions.getInitial();
+    const state = actions.getState();
+    const oldState = self.state;
+    const newState = updateState(oldState, state, initialState);
 
     // No need to go further if same
     if (!newState) {
         return;
     }
-
 
     // Cache values
     self.state = newState;
@@ -26,19 +27,29 @@ const onUpdate = (self, opts, state) => {
  * @param  {tag} self
  * @param  {*} opts
  */
-const onMount = (self, opts) => {
+const onMount = (self) => {
+    let unsubscribe;
+
     // Set update method
-    self.on('update', (state) => onUpdate(self, opts, state));
+    self.on('update', () => onUpdate(self));
 
     // Add for the actions update
-    actions.addView(self);
+    unsubscribe = actions.subscribe(self.update);
+    self.actions.push(unsubscribe);
 };
 
 /**
  * On unmount handler
  * @param  {tag} self
  */
-const onUnmount = (self) => actions.removeView(self);
+const onUnmount = (self) => {
+    // Remove events
+    self.off('update');
+
+    // Unsubscribe everything
+    self.actions.map(unsub => unsub());
+    self.actions = [];
+};
 
 // -----------------------------------------
 // Initialize
@@ -51,6 +62,9 @@ const init = function (opts) {
     // Set events for the view
     this.on('mount', () => onMount(this, opts));
     this.on('unmount', () => onUnmount(this));
+
+    // Set actions
+    this.actions = [];
 };
 
 /**

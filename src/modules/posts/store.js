@@ -1,5 +1,4 @@
-import { initStore } from 'bedrock/store';
-import deepClone from 'mout/lang/deepClone.js';
+import { createStore, combineReducers } from 'redux';
 
 // -----------------------------------------
 // VARS
@@ -13,66 +12,101 @@ const INITIAL_STATE = {
 // FUNCTIONS
 
 /**
- * Update posts type action
+ * Loading reducer
  * @param  {object}  state
  * @param  {object}  action
  * @return {object}
  */
-const changeQuery = (state, action) => {
-    const newState = deepClone(INITIAL_STATE);
-
-    newState.query = action.query || newState.query;
-
-    return newState;
+const loading = (state = false, action) => {
+    switch (action.type) {
+    case 'CHANGE_QUERY_LOADING':
+        return action.loading;
+    default:
+        return state;
+    }
 };
 
 /**
- * Update posts type action
+ * Error reducer
  * @param  {object}  state
  * @param  {object}  action
  * @return {object}
  */
-const updatePosts = (state, action) => {
-    const newState = state;
-    let hasThumbnail;
-    let posts;
-    let thumb;
-    let data;
-
-    // Action needed!
-    if (!action || !action.data || !action.data.data) {
-        return newState;
+const err = (state = null, action) => {
+    switch (action.type) {
+    case 'CHANGE_QUERY_ERR':
+        return action.err;
+    default:
+        return state;
     }
-
-    // Get the posts from data
-    data = action.data.data.children.map(val => val.data);
-
-    // Get the data that interests us
-    posts = data.map((val = {}) => {
-        thumb = val.thumbnail;
-        hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
-
-        return {
-            permalink: val.permalink,
-            thumbnail: hasThumbnail ? thumb : null,
-            author: val.author,
-            title: val.title,
-            num_comments: val.num_comments,
-            ups: val.ups,
-            downs: val.downs
-        };
-    }).filter(val => !!val.permalink);
-
-    // Finally set the data
-    newState.posts = posts;
-
-    return newState;
 };
+
+/**
+ * Query reducer
+ * @param  {object}  state
+ * @param  {object}  action
+ * @return {object}
+ */
+const query = (state = INITIAL_STATE.query, action) => {
+    switch (action.type) {
+    case 'CHANGE_QUERY':
+        return action.query || state;
+    default:
+        return state;
+    }
+};
+
+/**
+ * Posts reducer
+ * @param  {object}  state
+ * @param  {object}  action
+ * @return {object}
+ */
+const posts = (state = INITIAL_STATE.posts, action) => {
+    switch (action.type) {
+    case 'UPDATE_POSTS':
+        const actionData = action.data && action.data.data.children;
+        let hasThumbnail;
+        let postsData;
+        let thumb;
+        let data;
+
+        // Get the posts from data
+        data = actionData.map(val => val.data) || [];
+
+        // Get the data that interests us
+        postsData = data.map((val = {}) => {
+            thumb = val.thumbnail;
+            hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
+
+            return {
+                permalink: val.permalink,
+                thumbnail: hasThumbnail ? thumb : null,
+                author: val.author,
+                title: val.title,
+                num_comments: val.num_comments,
+                ups: val.ups,
+                downs: val.downs
+            };
+        }).filter(val => !!val.permalink);
+
+        // Finally set the data
+        return postsData;
+    default:
+        return state;
+    }
+};
+
+// -----------------------------------------
+// Initialize
+
+const reducers = combineReducers({ loading, err, query, posts });
+const store = createStore(reducers);
+
+// Register more methods
+store.getInitial = () => INITIAL_STATE;
 
 // -----------------------------------------
 // EXPORT
 
-export default initStore(INITIAL_STATE, {
-    'CHANGE_QUERY': changeQuery,
-    'UPDATE_POSTS': updatePosts
-});
+export default store;

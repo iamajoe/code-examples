@@ -81,6 +81,19 @@ fileFn = () => {
 
         return fileTask(files, buildPath);
     });
+    // TODO: This task isn't working...
+    // Run svg task
+    // .then(() => logTask('Run svg tasks'))
+    // .then(() => {
+    //     const fileTask = require(path.join(tasksPath, 'svg.js'));
+    //     const file = [{
+    //         cwd: buildPath,
+    //         src: '**/_assets/**/*.svg',
+    //         dest: buildPath
+    //     }];
+
+    //     return env === 'prod' && fileTask(file);
+    // });
 };
 
 /**

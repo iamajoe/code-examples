@@ -1,4 +1,4 @@
-import { riot } from 'bedrock/componentRiot';
+import riot from 'riot';
 import { isIe, isMobile } from 'bedrock/is';
 import 'containers/app.js';
 

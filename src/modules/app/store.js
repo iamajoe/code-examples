@@ -1,16 +1,13 @@
-import { initStore } from 'bedrock/store';
-import deepMixIn from 'mout/object/deepMixIn.js';
+import { createStore, combineReducers } from 'redux';
 
 // -----------------------------------------
 // VARS
 
 const INITIAL_STATE = {
-    data: {
-        content: {
-            type: '',
-            params: {
-                query: 'funny'
-            }
+    content: {
+        type: '',
+        params: {
+            query: 'funny'
         }
     }
 };
@@ -19,22 +16,30 @@ const INITIAL_STATE = {
 // FUNCTIONS
 
 /**
- * Sets content
+ * Content reducer
  * @param  {object}  state
  * @param  {object}  action
  * @return {object}
  */
-const setContent = (state, action) => {
-    const content = action.content;
-
-    return deepMixIn({}, state, {
-        data: { content }
-    });
+const content = (state = INITIAL_STATE.content, action) => {
+    switch (action.type) {
+    case 'SET_CONTENT':
+        return action.content;
+    default:
+        return state;
+    }
 };
+
+// -----------------------------------------
+// Initialize
+
+const reducers = combineReducers({ content });
+const store = createStore(reducers);
+
+// Register more methods
+store.getInitial = () => INITIAL_STATE;
 
 // -----------------------------------------
 // EXPORT
 
-export default initStore(INITIAL_STATE, {
-    'SET_CONTENT': setContent
-});
+export default store;

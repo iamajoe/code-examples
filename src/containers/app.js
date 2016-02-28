@@ -1,4 +1,4 @@
-import { riot } from 'bedrock/componentRiot';
+import riot from 'riot';
 import outdatedBrowser from 'bedrock/outdatedbrowser';
 import appActions from 'modules/app/actions.js';
 import 'components/posts/posts.js';

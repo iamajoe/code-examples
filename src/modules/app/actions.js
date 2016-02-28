@@ -10,15 +10,14 @@ import store from './store.js';
  * Sets content of app
  */
 const setContent = (action) => {
-    store.dispatchAction({ type: 'SET_CONTENT', content: action });
+    store.dispatch({ type: 'SET_CONTENT', content: action });
 };
 
 // -----------------------------------------
 // EXPORT
 
 export default {
-    addView: view => store.addView(view),
-    removeView: view => store.removeView(view),
+    subscribe: store.subscribe,
     getInitial: store.getInitial,
     getState: store.getState,
 

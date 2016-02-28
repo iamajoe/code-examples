@@ -14,8 +14,9 @@ const allRoutes = [].concat(rootRoutes);
 init(allRoutes, (appActions.getState()).content);
 
 // Add to the update pool
-appActions.addView({
-    update: state => updateOnAction(allRoutes, state)
+appActions.subscribe(() => {
+    const state = appActions.getState();
+    updateOnAction(allRoutes, state);
 });
 
 // -----------------------------------------
