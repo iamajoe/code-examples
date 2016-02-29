@@ -56,7 +56,9 @@ riot.tag('posts',
         <div class="thumb { no-thumb: !thumbnail } post-thumb" style="{ !!thumbnail ? 'background-image:url(' + thumbnail + ')' : '' }">
             <div class="align-middle-wrapper">
                 <div class="align-middle">
-                    ${ addIcon('camera', false, 'large') }
+                    ${ addIcon('camera', {
+                        size: 'large'
+                    }) }
                 </div>
             </div>
         </div>
