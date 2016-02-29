@@ -97,7 +97,7 @@ const render = (self) => {
             </div>
         </div>
         <div className="posts-wrapper">
-            <Posts err={posts.err} loading={posts.loading} list={posts.list}/>
+            <Posts {...posts}/>
         </div>
     </div>
     );

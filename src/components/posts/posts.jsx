@@ -4,6 +4,11 @@ import { addIcon } from 'bedrock/iconReact';
 // -----------------------------------------
 // VARS
 
+const PROP_TYPES = {
+    loading: React.PropTypes.bool,
+    list: React.PropTypes.array.isRequired
+};
+
 // -----------------------------------------
 // FUNCTIONS
 
@@ -20,7 +25,7 @@ const renderPost = (self, post) => {
     };
 
     return (
-    <div key={post.id} className="post-item">
+    <div key={post.id} className="post-item">
         <div className={thumbClass} style={thumbStyle}>
             <div className="align-middle-wrapper">
                 <div className="align-middle">
@@ -66,6 +71,9 @@ const render = (self) => {
 class Posts extends React.Component {
     render() { return render(this); }
 }
+
+// Set prop types
+Posts.propTypes = PROP_TYPES;
 
 // -------------------------------------------
 // EXPORT
