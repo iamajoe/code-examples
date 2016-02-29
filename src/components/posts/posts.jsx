@@ -52,10 +52,12 @@ const renderPost = (self, post) => {
 /**
  * Renders tag
  * @param  {tag} self
+ * @param  {object} props
  */
-const render = (self) => {
-    const loadingClass = !!self.props.loading ? 'loading is-loading' : 'loading';
-    const list = self.props.list.map((post) => renderPost(self, post));
+const render = (self, props) => {
+    const tagProps = props || self && self.props;
+    const loadingClass = !!tagProps.loading ? 'loading is-loading' : 'loading';
+    const list = tagProps.list.map((post) => renderPost(self, post));
 
     return (
     <div className="posts">
@@ -68,9 +70,13 @@ const render = (self) => {
 // -----------------------------------------
 // The tag
 
-class Posts extends React.Component {
-    render() { return render(this); }
-}
+// This would be the general use
+// class Posts extends React.Component {
+//     render() { return render(this); }
+// }
+
+// But only this solution is needed
+const Posts = (props) => render(null, props);
 
 // Set prop types
 Posts.propTypes = PROP_TYPES;
