@@ -1,20 +1,16 @@
 posts {
-    & .loading {
+    .loading {
         margin: -15px auto 0;
         opacity: 0;
 
         /* Transform used for better performance */
-        -webkit-transform: translateY(0);
-                transform: translateY(0);
-
-        -webkit-transition: opacity 0.15s ease-out, -webkit-transform 0.15s ease-out;
-                transition: opacity 0.15s ease-out,         transform 0.15s ease-out;
+        transform: translateY(0);
+        transition: opacity 0.15s ease-out,         transform 0.15s ease-out;
 
         &.is-loading {
             opacity: 1;
 
-            -webkit-transform: translateY(60px);
-                    transform: translateY(60px);
+            transform: translateY(60px);
         }
     }
 }

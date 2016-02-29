@@ -1,41 +1,30 @@
 import riot from 'riot';
-import { updateState } from 'bedrock/component';
 import { addIcon } from 'bedrock/icon';
-import actions from 'modules/posts/actions.js';
+
+// -----------------------------------------
+// Initialize
 
 /**
  * On update handler
  * @param  {tag} self
+ * @param  {object} opts
  */
-const onUpdate = (self) => {
-    const initialState = actions.getInitial();
-    const state = actions.getState();
-    const oldState = self.state;
-    const newState = updateState(oldState, state, initialState);
-
-    // No need to go further if same
-    if (!newState) {
-        return;
-    }
-
+const onUpdate = (self, opts) => {
     // Cache values
-    self.state = newState;
+    self.postsList = opts.list;
+
+    // TODO: Parent isn't passing always this guy!
+    // self.isLoading = opts.loading;
 };
 
 /**
  * On mount handler
  * @param  {tag} self
- * @param  {*} opts
+ * @param  {object} opts
  */
-const onMount = (self) => {
-    let unsubscribe;
-
+const onMount = (self, opts) => {
     // Set update method
-    self.on('update', () => onUpdate(self));
-
-    // Add for the actions update
-    unsubscribe = actions.subscribe(self.update);
-    self.actions.push(unsubscribe);
+    self.on('update', () => onUpdate(self, opts));
 };
 
 /**
@@ -45,26 +34,16 @@ const onMount = (self) => {
 const onUnmount = (self) => {
     // Remove events
     self.off('update');
-
-    // Unsubscribe everything
-    self.actions.map(unsub => unsub());
-    self.actions = [];
 };
-
-// -----------------------------------------
-// Initialize
 
 /**
  * Initialize
  * @param  {*} opts
  */
 const init = function (opts) {
-    // Set events for the view
+    // Set events
     this.on('mount', () => onMount(this, opts));
     this.on('unmount', () => onUnmount(this));
-
-    // Set actions
-    this.actions = [];
 };
 
 /**
@@ -72,8 +51,8 @@ const init = function (opts) {
  */
 riot.tag('posts',
     `
-    <div class="loading {is-loading: state.loading }"></div>
-    <div class="post-item" each="{ state.posts }">
+    <div class="loading {is-loading: isLoading }"></div>
+    <div class="post-item" each="{ postsList }">
         <div class="thumb { no-thumb: !thumbnail } post-thumb" style="{ !!thumbnail ? 'background-image:url(' + thumbnail + ')' : '' }">
             <div class="align-middle-wrapper">
                 <div class="align-middle">

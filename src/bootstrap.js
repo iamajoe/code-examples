@@ -22,5 +22,5 @@ document.addEventListener('DOMContentLoaded', function () {
     riot.mount('body', 'app');
 
     // Router
-    require('modules/route/router.js');
+    require('route/router.js');
 });

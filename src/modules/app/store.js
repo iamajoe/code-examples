@@ -1,4 +1,4 @@
-import { createStore, combineReducers } from 'redux';
+import { combineReducers } from 'redux';
 
 // -----------------------------------------
 // VARS
@@ -31,15 +31,9 @@ const content = (state = INITIAL_STATE.content, action) => {
 };
 
 // -----------------------------------------
-// Initialize
-
-const reducers = combineReducers({ content });
-const store = createStore(reducers);
-
-// Register more methods
-store.getInitial = () => INITIAL_STATE;
-
-// -----------------------------------------
 // EXPORT
 
-export default store;
+export default {
+    getInitial: () => INITIAL_STATE,
+    reducers: combineReducers({ content })
+};

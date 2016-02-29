@@ -1,11 +1,11 @@
-import { createStore, combineReducers } from 'redux';
+import { combineReducers } from 'redux';
 
 // -----------------------------------------
 // VARS
 
 const INITIAL_STATE = {
     query: null,
-    posts: []
+    list: []
 };
 
 // -----------------------------------------
@@ -49,7 +49,7 @@ const err = (state = null, action) => {
  */
 const query = (state = INITIAL_STATE.query, action) => {
     switch (action.type) {
-    case 'CHANGE_QUERY':
+    case 'CHANGE_POSTS_QUERY':
         return action.query || state;
     default:
         return state;
@@ -57,12 +57,12 @@ const query = (state = INITIAL_STATE.query, action) => {
 };
 
 /**
- * Posts reducer
+ * List reducer
  * @param  {object}  state
  * @param  {object}  action
  * @return {object}
  */
-const posts = (state = INITIAL_STATE.posts, action) => {
+const list = (state = INITIAL_STATE.list, action) => {
     switch (action.type) {
     case 'UPDATE_POSTS':
         const actionData = action.data && action.data.data.children;
@@ -80,6 +80,7 @@ const posts = (state = INITIAL_STATE.posts, action) => {
             hasThumbnail = !!thumb && thumb !== 'nsfw' && thumb !== 'self';
 
             return {
+                id: val.id,
                 permalink: val.permalink,
                 thumbnail: hasThumbnail ? thumb : null,
                 author: val.author,
@@ -98,15 +99,9 @@ const posts = (state = INITIAL_STATE.posts, action) => {
 };
 
 // -----------------------------------------
-// Initialize
-
-const reducers = combineReducers({ loading, err, query, posts });
-const store = createStore(reducers);
-
-// Register more methods
-store.getInitial = () => INITIAL_STATE;
-
-// -----------------------------------------
 // EXPORT
 
-export default store;
+export default {
+    getInitial: () => INITIAL_STATE,
+    reducers: combineReducers({ loading, err, query, list })
+};
