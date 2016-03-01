@@ -16,6 +16,7 @@ const PROP_TYPES = {
  * Renders post tag
  * @param  {tag} self
  * @param  {object} post
+ * @return {template}
  */
 const renderPost = (self, post) => {
     const thumbnail = post.thumbnail;

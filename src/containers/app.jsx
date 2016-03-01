@@ -36,14 +36,11 @@ const onChange = (self, evt) => {
 };
 
 /**
- * Component mount
+ * Component before mount
  * @param  {tag} self
  */
-const componentDidMount = (self) => {
+const componentWillMount = (self) => {
     const defaultQuery = actions.getState().app.content.params.query;
-
-    // Set outdated browser
-    outdatedBrowser({ lowerThan: 'IE11', languagePath: '' });
 
     // Add for the actions update
     self.unsubscribe = actions.subscribe(() => {
@@ -55,6 +52,15 @@ const componentDidMount = (self) => {
 
     // Initialize vars
     self.state = {};
+};
+
+/**
+ * Component mount
+ * @param  {tag} self
+ */
+const componentDidMount = () => {
+    // Set outdated browser
+    outdatedBrowser({ lowerThan: 'IE11', languagePath: '' });
 };
 
 /**
@@ -107,6 +113,7 @@ const render = (self) => {
 // The tag
 
 class App extends React.Component {
+    componentWillMount() { componentWillMount(this); }
     componentDidMount() { componentDidMount(this); }
     componentWillUnmount() { componentWillUnmount(this); }
 
