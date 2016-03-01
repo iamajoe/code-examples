@@ -24,9 +24,9 @@ const INITIAL_STATE = {
 const content = (state = INITIAL_STATE.content, action) => {
     switch (action.type) {
     case 'SET_CONTENT':
-        return action.content;
+        return { ...action.content };
     default:
-        return state;
+        return { ...state };
     }
 };
 

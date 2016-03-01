@@ -7,15 +7,15 @@ import actions from '../../modules/actions.js';
  * Index
  */
 const index = {
-    'type': 'INDEX',
-    'url': '/',
+    type: 'INDEX',
+    url: '/',
     /**
      * Route handler
      * @param  {object} route
      * @param  {object} ctx
      * @param  {function} next
      */
-    'onRoute': () => {
+    onRoute: () => {
         actions.setContent({
             type: 'SEARCH',
             params: {
@@ -29,14 +29,14 @@ const index = {
  * Search
  */
 const search = {
-    'type': 'SEARCH',
-    'url': '/search/:query',
+    type: 'SEARCH',
+    url: '/search/:query',
     /**
      * Url parsing
      * @param  {object} params
      * @return {string}
      */
-    'urlParse': (params) => {
+    urlParse: (params) => {
         return '/search/' + params.query;
     },
     /**
@@ -45,7 +45,7 @@ const search = {
      * @param  {object} ctx
      * @param  {function} next
      */
-    'onRoute': (route, ctx) => {
+    onRoute: (route, ctx) => {
         const params = ctx.params;
         const type = route.type;
 

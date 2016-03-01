@@ -1,3 +1,4 @@
+import { loadingReducer, errReducer } from 'bedrock/store';
 import { combineReducers } from 'redux';
 
 // -----------------------------------------
@@ -10,36 +11,6 @@ const INITIAL_STATE = {
 
 // -----------------------------------------
 // FUNCTIONS
-
-/**
- * Loading reducer
- * @param  {object}  state
- * @param  {object}  action
- * @return {object}
- */
-const loading = (state = false, action) => {
-    switch (action.type) {
-    case 'UPDATE_POSTS_LOADING':
-        return action.loading;
-    default:
-        return state;
-    }
-};
-
-/**
- * Error reducer
- * @param  {object}  state
- * @param  {object}  action
- * @return {object}
- */
-const err = (state = null, action) => {
-    switch (action.type) {
-    case 'UPDATE_POSTS_ERR':
-        return action.err;
-    default:
-        return state;
-    }
-};
 
 /**
  * Query reducer
@@ -94,7 +65,7 @@ const list = (state = INITIAL_STATE.list, action) => {
         // Finally set the data
         return postsData;
     default:
-        return state;
+        return [...state];
     }
 };
 
@@ -103,5 +74,8 @@ const list = (state = INITIAL_STATE.list, action) => {
 
 export default {
     getInitial: () => INITIAL_STATE,
-    reducers: combineReducers({ loading, err, query, list })
+    reducers: combineReducers({
+        loading: loadingReducer(false), err: errReducer(null),
+        query, list
+    })
 };

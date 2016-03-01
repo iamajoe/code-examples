@@ -20,7 +20,7 @@
     "raw-loader": "^0.5.1"
   },
   "dependencies": {
-    "bedrock": "git://github.com/Sendoushi/bedrock.git#v0.1.6",
+    "bedrock": "git://github.com/Sendoushi/bedrock.git#v0.1.8",
     "bluebird": "~3.1.1",
     "mout": "~0.11.1",
     "page": "^1.6.4",
