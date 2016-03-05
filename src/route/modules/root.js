@@ -16,7 +16,7 @@ const index = {
      * @param  {function} next
      */
     onRoute: () => {
-        actions.setContent({
+        actions.app.setContent({
             type: 'SEARCH',
             params: {
                 query: 'funny'
@@ -49,7 +49,7 @@ const search = {
         const params = ctx.params;
         const type = route.type;
 
-        actions.setContent({ type, params });
+        actions.app.setContent({ type, params });
     }
 };
 

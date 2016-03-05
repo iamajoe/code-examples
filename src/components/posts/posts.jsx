@@ -1,5 +1,5 @@
 import React from 'react';
-import { addIcon } from 'bedrock/iconReact';
+import { addIcon } from 'bedrock/icon';
 
 // -----------------------------------------
 // VARS

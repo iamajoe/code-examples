@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import outdatedBrowser from 'bedrock/outdatedbrowser';
+import { connect, disconnect } from 'bedrock/component';
 import actions from 'modules/actions.js';
 import { Posts } from 'components/posts/posts.jsx';
 
@@ -28,7 +29,7 @@ const onChange = (self, evt) => {
         self.throttler = null;
 
         // Request new data
-        (!!query) && actions.setContent({
+        (!!query) && actions.app.setContent({
             type: 'SEARCH',
             params: { query }
         });
@@ -40,18 +41,17 @@ const onChange = (self, evt) => {
  * @param  {tag} self
  */
 const componentWillMount = (self) => {
-    const defaultQuery = actions.getState().app.content.params.query;
-
-    // Add for the actions update
-    self.unsubscribe = actions.subscribe(() => {
-        self.setState(actions.getState());
-    });
+    let state = actions.getState();
+    if (!state || !state.app) {
+        state = actions.getInitial();
+    }
 
     // Request first default query
-    actions.changeQuery(defaultQuery);
+    const defaultQuery = state.app.content.params.query;
+    actions.posts.changeQuery(defaultQuery);
 
     // Initialize vars
-    self.state = {};
+    self.state = { ...state };
 };
 
 /**
@@ -61,6 +61,11 @@ const componentWillMount = (self) => {
 const componentDidMount = () => {
     // Set outdated browser
     outdatedBrowser({ lowerThan: 'IE11', languagePath: '' });
+
+    // Subscribe
+    connect(self, actions, (state) => {
+        self.setState({ ...state });
+    });
 };
 
 /**
@@ -71,8 +76,7 @@ const componentWillUnmount = (self) => {
     (!!self.throttler) && clearTimeout(self.throttler);
 
     // Unsubscribe
-    self.unsubscribe && self.unsubscribe();
-    self.unsubscribe = null;
+    disconnect(self);
 };
 
 /**
@@ -82,10 +86,7 @@ const componentWillUnmount = (self) => {
 const render = (self) => {
     const onChangeHandler = evt => onChange(self, evt);
     const onSubmit = evt => evt.preventDefault();
-    let posts = self.state && self.state.posts;
-
-    // Get an initial
-    posts = posts || actions.getInitial().posts;
+    const posts = self.state.posts;
 
     return (
     <div>

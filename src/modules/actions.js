@@ -26,6 +26,6 @@ export default {
     getInitial: store.getInitial,
     getState: store.getState,
 
-    ...appActions,
-    ...postsActions
+    app: appActions,
+    posts: postsActions
 };
