@@ -1,0 +1,23 @@
+{
+  "protocol": "http",
+  "host": "localhost",
+  "port": 4040,
+
+  "db": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "code-examples-dev"
+  },
+
+  "security": {
+    "rateLimit": {
+      "interval": { "min": 5 },
+      "max": 500,
+      "delayAfter": 100,
+      "timeWait": 1000
+    },
+    "authentication": {
+      "secret": "7985eaafa866e386b48efeb29a8f38e38d7f0bf50d84b4912db458832bf2223dd2e1a15e65c9b7aae8bf8f7efbe577cda876d13542f98f0c05ec9f071281ed15d8fec41a90e9868aa57c6e631f25fd5d8d4758409680c75517ce34245a9bdeafb23d5c7a486d6a378f9b350a2d46dedc90147ed03f5bf72b94045585b2b98f461d330b2d52c1444f39f3fb6ab4c43d1a900a098812ab28e1032fee61fa729df498b35d86d9a28792cf72e5e4d971ae0e9b269706a389164ff4b7d55c258f0f481075fc38b3548c5cd84818e829fa31234f498ece7f1aee640d6bf5a5e669b77bd03e14f663b195e8741229abaf80bb9140565699fada92d221dc9194a5bbfe6f"
+    }
+  }
+}

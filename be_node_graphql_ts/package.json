@@ -1,0 +1,48 @@
+{
+  "name": "be_node_graphql_ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test-unit": "NODE_ENV=testing PORT=7000 mocha --require ts-node/register --require tsconfig-paths/register --recursive \"tests/**/*.spec.ts\" --bail --exit --timeout 120000",
+    "tslint": "tslint --project tsconfig.json",
+    "test": "npm run tslint && npm run test-unit",
+    "build": "tsc --project tsconfig.json && rm -rf bin/tests",
+    "start": "npm run build && node -e 'require(\"./bin/src/index.js\").init({})'"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/cors": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^14.5.4",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.8.1",
+    "koa-graphql": "^0.8.0",
+    "koa-helmet": "^5.1.0",
+    "koa-router": "^7.4.0",
+    "pre-commit": "^1.2.2",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.10.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "tslint-config-security": "^1.4.0",
+    "typescript": "^2.9.2",
+    "typings": "^2.1.1",
+    "uniqid": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.46",
+    "@types/koa-helmet": "^3.1.2",
+    "@types/koa-router": "7.0.31",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "supertest": "^4.0.2",
+    "tsconfig-paths": "^3.8.0"
+  },
+  "pre-commit": [
+    "test"
+  ]
+}

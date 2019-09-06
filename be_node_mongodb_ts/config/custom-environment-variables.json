@@ -1,0 +1,57 @@
+{
+  "protocol": "BO_PROTOCOL",
+  "host": "BO_HOST",
+  "port": "PORT",
+
+  "db": {
+    "host": "BO_DB_HOST",
+    "port": "BO_DB_PORT",
+    "name": "BO_DB_NAME",
+    "username": "BO_DB_USERNAME",
+    "password": "BO_DB_PASSWORD",
+    "connectUrl": "BO_DB_CONNECT_URL"
+  },
+
+  "redis": {
+    "enable": "BO_REDIS_ENABLE",
+    "host": "BO_REDIS_HOST",
+    "port": "BO_REDIS_PORT"
+  },
+
+  "slack": {
+    "enable": "BO_SLACK_ENABLE",
+    "postWebhook": "BO_SLACK_POSTWEBHOOK"
+  },
+
+  "s3bucket": "BO_S3_BUCKET",
+
+  "mixpanel": {
+    "secret": "BO_MIXPANEL_SECRET"
+  },
+
+  "mondido": {
+    "authKey": "BO_MONDIDO_AUTH_KEY"
+  },
+
+  "security": {
+    "bot": {
+      "email": "BO_BOT_EMAIL",
+      "uniqueId": "BO_BOT_UNIQUEID"
+    },
+    "authentication": {
+      "secret": "BO_AUTH_SECRET"
+    },
+    "fcm": {
+      "secret": "BO_FCM_SECRET"
+    },
+    "emailer": {
+      "accessKeyId" : "BO_EMAILER_ACCESS_KEY" ,
+      "secretAccessKey" : "BO_EMAILER_SECRET_KEY",
+      "region" : "BO_EMAILER_REGION"
+    },
+    "s3config": {
+      "accessKeyId": "BO_S3_ACCESS_KEY_ID",
+      "secretAccessKey": "BO_S3_SECRET_ACCESS_KEY"
+    }
+  }
+}

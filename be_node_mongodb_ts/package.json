@@ -1,0 +1,57 @@
+{
+  "name": "be_node_mongodb_ts",
+  "description": "",
+  "version": "1.0.0",
+  "homepage": "",
+  "main": "bin/app.js",
+  "keywords": [],
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "src",
+    "test": "test/"
+  },
+  "engines": {
+    "node": "8.8.1",
+    "npm": "5.5.1"
+  },
+  "scripts": {
+    "test-unit": "NODE_ENV=testing mocha --require ts-node/register --require tsconfig-paths/register --recursive \"tests/**/*.spec.ts\" --bail --exit --timeout 120000",
+    "tslint": "tslint --project tsconfig.json",
+    "test": "npm run tslint && npm run test-unit",
+    "copy:static": "rm -rf bin && mkdir -p bin/src/services/notifications && mkdir -p bin/src/services/uploads && cp -rf locales bin/locales && cp -rf config bin/config && cp -rf src/services/notifications/templates bin/src/services/notifications/templates && cp -rf src/services/uploads/uploads.buffer.js bin/src/services/uploads/uploads.buffer.js",
+    "build": "npm run copy:static && tsc --project tsconfig.json && rm -rf bin/tests",
+    "start": "npm run build && node -e 'require(\"./bin/src/app.js\").init()'"
+  },
+  "dependencies": {
+    "@koa/cors": "^2.2.2",
+    "crypto": "^1.0.1",
+    "http": "0.0.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^5.1.0",
+    "koa2-ratelimit": "^0.9.0",
+    "socket.io": "^2.2.0",
+    "toolbox-api": "^1.0.48",
+    "validator": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.7.4",
+    "chai": "^4.1.2",
+    "mocha": "^6.0.2",
+    "pre-commit": "^1.2.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "socket.io-client": "^2.1.1",
+    "ts-node": "^7.0.0",
+    "tsconfig-paths": "^3.6.0",
+    "tslint": "^5.10.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "tslint-config-security": "^1.4.0",
+    "typescript": "^2.9.2",
+    "typings": "^2.1.1"
+  },
+  "pre-commit": [
+    "test"
+  ]
+}

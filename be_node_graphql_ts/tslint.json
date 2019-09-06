@@ -1,0 +1,51 @@
+{
+  "extends": ["tslint-config-airbnb", "tslint-config-security"],
+  "rules": {
+    "ter-indent": [true, 2],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
+    "max-line-length": [true, 160],
+    "trailing-comma": [false],
+
+    "comment-format": [
+      true,
+      "check-space"
+    ],
+    "curly": true,
+    "eofline": true,
+    "indent": [true, "spaces", 2],
+    "member-access": true,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-console": [
+      true,
+      "debug",
+      "info",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-empty": [true, "allow-empty-catch"],
+    "no-eval": true,
+    "no-shadowed-variable": true,
+    "no-trailing-whitespace": true,
+    "no-var-keyword": true,
+    "no-null-keyword": false,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ]
+  },
+
+  "import-name": false
+}
+

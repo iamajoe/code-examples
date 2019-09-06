@@ -1,0 +1,7 @@
+{
+  "api": "https://countries.trevorblades.com/",
+
+  "appColor": "hsla(200, 7%, 1%, 1.0)",
+  "appBaseFontSize": 16,
+  "appPadding": 0.7
+}
