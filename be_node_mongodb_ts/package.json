@@ -30,7 +30,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-helmet": "^5.1.0",
     "koa2-ratelimit": "^0.9.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "toolbox-api": "^1.0.48",
     "validator": "^11.1.0"
   },
