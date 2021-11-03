@@ -32,7 +32,7 @@
     "koa2-ratelimit": "^0.9.0",
     "socket.io": "^2.2.0",
     "toolbox-api": "^1.0.48",
-    "validator": "^11.1.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
